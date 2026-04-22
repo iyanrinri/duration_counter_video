@@ -28,9 +28,9 @@ pip install -r requirements.txt
 ```
 
 ### 2. Install FFmpeg (untuk mendapat durasi video)
-**Pilihan A - Menggunakan Chocolatey (Windows):**
+**Pilihan A - Menggunakan Winget (Windows):**
 ```bash
-choco install ffmpeg
+winget install ffmpeg
 ```
 
 **Pilihan B - Download dari website:**
