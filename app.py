@@ -154,13 +154,17 @@ def get_video_duration(file_path):
 def find_recording_files(drive_path):
     """Find recording.mp4 files in drive"""
     files_found = []
-    try:
-        path = Path(drive_path)
-        for file_path in path.rglob("*"):
-            if file_path.is_file() and file_path.name.lower() == SEARCH_FILENAME.lower():
-                files_found.append(str(file_path))
-    except Exception as e:
-        print(f"Error searching drive {drive_path}: {e}")
+    search_name = SEARCH_FILENAME.lower()
+    print(f"Searching in: {drive_path}")
+    
+    # Menggunakan os.walk karena lebih tahan terhadap PermissionError (folder tidak bisa diakses)
+    # dibandingkan path.rglob("*") yang bisa crash di tengah jalan
+    for root, dirs, files in os.walk(drive_path):
+        for file in files:
+            if file.lower() == search_name:
+                full_path = os.path.join(root, file)
+                files_found.append(full_path)
+                
     return files_found
 
 

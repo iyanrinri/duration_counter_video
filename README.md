@@ -11,8 +11,19 @@ Script Python yang monitor drive USB/SD Card dan otomatis cari file `recording.m
 
 ## Persiapan:
 
-### 1. Install Python Dependencies
+### 1. Setup Virtual Environment & Install Dependencies
+Jalankan script setup untuk membuat virtual environment dan menginstall library yang dibutuhkan (hanya perlu dijalankan sekali):
+- **Windows**: Klik dua kali file `setup_venv.bat`
+
+Atau jika ingin setup manual melalui terminal:
 ```bash
+python -m venv venv
+
+# Aktifkan venv:
+venv\Scripts\activate.bat   # Windows
+# source venv/bin/activate  # Mac/Linux
+
+# Install dependencies:
 pip install -r requirements.txt
 ```
 
@@ -33,19 +44,36 @@ ffprobe -version
 
 ## Cara Pakai:
 
-### 1. Jalankan script:
+### 1. Jalankan Aplikasi
+Setiap kali ingin menjalankan script, Anda **wajib** mengaktifkan virtual environment terlebih dahulu:
+
 ```bash
-python monitor_drives.py
+# 1. Aktifkan venv
+venv\Scripts\activate.bat   # Windows
+# source venv/bin/activate  # Mac/Linux
+
+# 2. Jalankan aplikasi
+python app.py
 ```
 
-### 2. Connect SD Card / USB Drive
+*(Tips Windows: Anda bisa langsung klik dua kali file `run_app.bat` untuk mengaktifkan venv dan menjalankan aplikasi secara otomatis).*
+
+### 2. Menjalankan Otomatis Saat Komputer Nyala (Start on Boot)
+Jika Anda ingin program ini berjalan secara otomatis di background (tersembunyi) setiap kali komputer Windows dinyalakan:
+1. Klik kanan pada file `install_service.bat`
+2. Pilih **Run as Administrator**
+3. Program berhasil didaftarkan ke Task Scheduler dan akan berjalan otomatis saat Log In.
+
+*(Untuk menghapus dari startup, jalankan `uninstall_service.bat` as Administrator).*
+
+### 3. Connect SD Card / USB Drive
 Script akan otomatis:
 - Detect drive baru
 - Scan untuk file `recording.mp4`
 - Extract metadata
 - Simpan ke `recording_metadata.jsonl`
 
-### 3. Lihat hasil:
+### 4. Lihat hasil:
 File `recording_metadata.jsonl` di folder yang sama, format JSON Lines (1 JSON per baris):
 
 ```json
