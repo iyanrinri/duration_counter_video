@@ -57,6 +57,7 @@
             gap: 10px;
             margin-bottom: 30px;
             flex-wrap: wrap;
+            align-items: center;
         }
 
         button {
@@ -91,6 +92,17 @@
             background: #ff5252;
             transform: translateY(-2px);
             box-shadow: 0 5px 20px rgba(255, 107, 107, 0.4);
+        }
+
+        .btn-toggle-all {
+            background: #f0f1f5;
+            color: #667eea;
+            padding: 8px 16px;
+            font-size: 14px;
+        }
+
+        .btn-toggle-all:hover:not(:disabled) {
+            background: #e4e6ed;
         }
 
         button:disabled {
@@ -163,46 +175,123 @@
             color: #333;
         }
 
-        .summary-card.empty {
-            background: #f0f0f0;
-            opacity: 0.6;
-        }
-
         .section {
             margin-bottom: 30px;
         }
 
-        .section h2 {
-            font-size: 20px;
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
             margin-bottom: 15px;
-            color: #333;
             border-bottom: 2px solid #667eea;
             padding-bottom: 10px;
         }
 
-        .recordings-list {
-            display: grid;
+        .section h2 {
+            font-size: 20px;
+            color: #333;
+            border: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        /* Accordion Styles */
+        .date-group {
+            margin-bottom: 15px;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .date-group.expanded {
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+            border-color: #667eea;
+        }
+
+        .date-header {
+            background: #f8f9fa;
+            padding: 15px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            cursor: pointer;
+            user-select: none;
+            transition: background 0.2s ease;
+        }
+
+        .date-header:hover {
+            background: #f0f1f5;
+        }
+
+        .date-group.expanded .date-header {
+            background: #f0f1f5;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        .date-info {
+            display: flex;
+            align-items: center;
             gap: 15px;
         }
 
-        .recording-item {
-            background: #f8f9fa;
+        .date-title {
+            font-weight: bold;
+            font-size: 16px;
+            color: #333;
+        }
+
+        .date-stats {
+            display: flex;
+            gap: 10px;
+            font-size: 12px;
+            color: #666;
+        }
+
+        .stat-badge {
+            background: #e4e6ed;
+            padding: 2px 8px;
+            border-radius: 12px;
+            white-space: nowrap;
+        }
+
+        .expand-icon {
+            transition: transform 0.3s ease;
+            color: #667eea;
+        }
+
+        .date-group.expanded .expand-icon {
+            transform: rotate(180deg);
+        }
+
+        .recordings-list {
             padding: 15px;
+            background: white;
+            display: grid;
+            gap: 10px;
+        }
+
+        .recording-item {
+            background: #ffffff;
+            padding: 12px;
             border-radius: 6px;
+            border: 1px solid #f0f0f0;
             border-left: 4px solid #667eea;
             transition: all 0.3s ease;
         }
 
         .recording-item:hover {
-            background: #f0f1f5;
+            background: #fcfcff;
             transform: translateX(5px);
+            border-color: #d1d9ff;
         }
 
         .recording-item-header {
             display: flex;
             justify-content: space-between;
             align-items: start;
-            margin-bottom: 10px;
+            margin-bottom: 8px;
         }
 
         .recording-item-title {
@@ -210,10 +299,11 @@
             color: #333;
             word-break: break-all;
             flex: 1;
+            font-size: 14px;
         }
 
         .recording-item-time {
-            font-size: 12px;
+            font-size: 11px;
             color: #999;
             white-space: nowrap;
             margin-left: 10px;
@@ -221,10 +311,9 @@
 
         .recording-item-details {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-            gap: 15px;
-            font-size: 13px;
-            margin-top: 10px;
+            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+            gap: 10px;
+            font-size: 12px;
         }
 
         .detail {
@@ -235,7 +324,7 @@
         .detail-label {
             color: #666;
             font-weight: 600;
-            margin-bottom: 4px;
+            margin-bottom: 2px;
         }
 
         .detail-value {
@@ -249,11 +338,22 @@
             color: #999;
         }
 
-        .empty-state svg {
-            width: 60px;
-            height: 60px;
-            margin-bottom: 15px;
-            opacity: 0.3;
+        /* Animations */
+        .fade-enter-active, .fade-leave-active {
+            transition: opacity 0.3s ease;
+        }
+        .fade-enter-from, .fade-leave-to {
+            opacity: 0;
+        }
+
+        .slide-enter-active, .slide-leave-active {
+            transition: max-height 0.3s ease-out, opacity 0.3s ease;
+            max-height: 2000px;
+            overflow: hidden;
+        }
+        .slide-enter-from, .slide-leave-to {
+            max-height: 0;
+            opacity: 0;
         }
 
         @media (max-width: 768px) {
@@ -267,6 +367,7 @@
 
             .controls {
                 flex-direction: column;
+                align-items: stretch;
             }
 
             button {
@@ -278,8 +379,15 @@
                 grid-template-columns: 1fr;
             }
 
-            .recording-item-details {
-                grid-template-columns: 1fr;
+            .date-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 10px;
+            }
+
+            .expand-icon {
+                align-self: flex-end;
+                margin-top: -20px;
             }
         }
     </style>
@@ -305,10 +413,12 @@
                 </div>
 
                 <!-- Status Message -->
-                <div v-if="statusMessage" :class="['status', statusType]">
-                    <span v-if="statusType === 'loading'" class="spinner"></span>
-                    {{ statusMessage }}
-                </div>
+                <transition name="fade">
+                    <div v-if="statusMessage" :class="['status', statusType]">
+                        <span v-if="statusType === 'loading'" class="spinner"></span>
+                        {{ statusMessage }}
+                    </div>
+                </transition>
 
                 <!-- Summary Cards -->
                 <div class="summary" v-if="hasData">
@@ -336,29 +446,59 @@
                     <p style="font-size: 12px; margin-top: 10px;">Click "Scan Drives" to start monitoring</p>
                 </div>
 
-                <!-- Recordings Section -->
-                <div v-if="metadata.length > 0" class="section">
-                    <h2>📹 Recordings ({{ metadata.length }})</h2>
-                    <div class="recordings-list">
-                        <div v-for="(recording, index) in metadata" :key="index" class="recording-item">
-                            <div class="recording-item-header">
-                                <div class="recording-item-title">{{ recording.file_path }}</div>
-                                <div class="recording-item-time">{{ formatDate(recording.timestamp) }}</div>
+                <!-- Recordings Section (Grouped by Date) -->
+                <div v-if="Object.keys(grouped).length > 0" class="section">
+                    <div class="section-header">
+                        <h2>📹 Backlog ({{ Object.keys(grouped).length }} Days)</h2>
+                        <div class="section-controls">
+                            <button class="btn-toggle-all" @click="toggleAll(true)" v-if="!allExpanded">Expand All</button>
+                            <button class="btn-toggle-all" @click="toggleAll(false)" v-else>Collapse All</button>
+                        </div>
+                    </div>
+                    
+                    <div class="groups-list">
+                        <div v-for="(group, date) in grouped" :key="date" 
+                             :class="['date-group', { expanded: isExpanded(date) }]">
+                            
+                            <div class="date-header" @click="toggleDate(date)">
+                                <div class="date-info">
+                                    <div class="date-title">{{ formatDisplayDate(date) }}</div>
+                                    <div class="date-stats">
+                                        <span class="stat-badge">{{ group.file_count }} files</span>
+                                        <span class="stat-badge">{{ group.total_duration_formatted }}</span>
+                                    </div>
+                                </div>
+                                <div class="expand-icon">
+                                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <polyline points="6 9 12 15 18 9"></polyline>
+                                    </svg>
+                                </div>
                             </div>
-                            <div class="recording-item-details">
-                                <div class="detail">
-                                    <span class="detail-label">Duration</span>
-                                    <span class="detail-value">{{ formatDuration(recording.duration_seconds) }}</span>
+
+                            <transition name="slide">
+                                <div v-if="isExpanded(date)" class="recordings-list">
+                                    <div v-for="(recording, idx) in group.files" :key="idx" class="recording-item">
+                                        <div class="recording-item-header">
+                                            <div class="recording-item-title">{{ recording.file_path }}</div>
+                                            <div class="recording-item-time">{{ formatTime(recording.timestamp) }}</div>
+                                        </div>
+                                        <div class="recording-item-details">
+                                            <div class="detail">
+                                                <span class="detail-label">Duration</span>
+                                                <span class="detail-value">{{ formatDuration(recording.duration_seconds) }}</span>
+                                            </div>
+                                            <div class="detail">
+                                                <span class="detail-label">Size</span>
+                                                <span class="detail-value">{{ formatFileSize(recording.file_size) }}</span>
+                                            </div>
+                                            <div class="detail">
+                                                <span class="detail-label">MD5 (1MB)</span>
+                                                <span class="detail-value" style="font-family: monospace; font-size: 10px;">{{ recording.md5_first_1mb }}</span>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
-                                <div class="detail">
-                                    <span class="detail-label">Size</span>
-                                    <span class="detail-value">{{ formatFileSize(recording.file_size) }}</span>
-                                </div>
-                                <div class="detail">
-                                    <span class="detail-label">MD5 (1MB)</span>
-                                    <span class="detail-value" style="font-family: monospace; font-size: 11px;">{{ recording.md5_first_1mb }}</span>
-                                </div>
-                            </div>
+                            </transition>
                         </div>
                     </div>
                 </div>
@@ -374,6 +514,8 @@
                 return {
                     metadata: [],
                     backlog: {},
+                    grouped: {},
+                    expandedDates: [],
                     isLoading: false,
                     statusMessage: '',
                     statusType: '',
@@ -381,7 +523,11 @@
             },
             computed: {
                 hasData() {
-                    return this.backlog.total_files > 0 || this.metadata.length > 0;
+                    return (this.backlog && this.backlog.total_files > 0) || this.metadata.length > 0;
+                },
+                allExpanded() {
+                    const dates = Object.keys(this.grouped);
+                    return dates.length > 0 && dates.every(date => this.expandedDates.includes(date));
                 }
             },
             methods: {
@@ -389,8 +535,15 @@
                     try {
                         const response = await fetch('/api/data');
                         const data = await response.json();
-                        this.metadata = data.metadata;
-                        this.backlog = data.backlog;
+                        this.metadata = data.metadata || [];
+                        this.backlog = data.backlog || {};
+                        this.grouped = data.grouped || {};
+                        
+                        // Expand the first group by default if it's the first load
+                        const dates = Object.keys(this.grouped);
+                        if (dates.length > 0 && this.expandedDates.length === 0) {
+                            this.expandedDates.push(dates[0]);
+                        }
                     } catch (error) {
                         console.error('Error loading data:', error);
                         this.showStatus('Error loading data', 'error');
@@ -411,8 +564,14 @@
                         const data = await response.json();
 
                         if (data.status === 'success') {
-                            this.metadata = data.data.metadata;
-                            this.backlog = data.data.backlog;
+                            this.metadata = data.data.metadata || [];
+                            this.backlog = data.data.backlog || {};
+                            
+                            // Get updated grouped data
+                            const dataResponse = await fetch('/api/data');
+                            const updatedData = await dataResponse.json();
+                            this.grouped = updatedData.grouped || {};
+                            
                             this.showStatus('✅ Scan completed successfully', 'success');
                         } else {
                             this.showStatus(`❌ Error: ${data.message}`, 'error');
@@ -445,6 +604,8 @@
                         if (data.status === 'success') {
                             this.metadata = [];
                             this.backlog = {};
+                            this.grouped = {};
+                            this.expandedDates = [];
                             this.showStatus(`✅ Data cleared (${data.deleted_files.join(', ')})`, 'success');
                         } else {
                             this.showStatus(`❌ Error: ${data.message}`, 'error');
@@ -454,6 +615,24 @@
                         this.showStatus('Error clearing data', 'error');
                     } finally {
                         this.isLoading = false;
+                    }
+                },
+                isExpanded(date) {
+                    return this.expandedDates.includes(date);
+                },
+                toggleDate(date) {
+                    const index = this.expandedDates.indexOf(date);
+                    if (index > -1) {
+                        this.expandedDates.splice(index, 1);
+                    } else {
+                        this.expandedDates.push(date);
+                    }
+                },
+                toggleAll(expand) {
+                    if (expand) {
+                        this.expandedDates = Object.keys(this.grouped);
+                    } else {
+                        this.expandedDates = [];
                     }
                 },
                 showStatus(message, type) {
@@ -467,13 +646,14 @@
                     }
                 },
                 formatFileSize(bytes) {
-                    if (bytes === 0) return '0 B';
+                    if (!bytes || bytes === 0) return '0 B';
                     const k = 1024;
                     const sizes = ['B', 'KB', 'MB', 'GB', 'TB'];
                     const i = Math.floor(Math.log(bytes) / Math.log(k));
                     return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
                 },
                 formatDuration(seconds) {
+                    if (!seconds) return '0h 0m 0s';
                     const h = Math.floor(seconds / 3600);
                     const m = Math.floor((seconds % 3600) / 60);
                     const s = Math.floor(seconds % 60);
@@ -486,6 +666,25 @@
                         return date.toLocaleString();
                     } catch {
                         return dateString;
+                    }
+                },
+                formatTime(dateString) {
+                    if (!dateString) return '';
+                    try {
+                        const date = new Date(dateString);
+                        return date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+                    } catch {
+                        return dateString;
+                    }
+                },
+                formatDisplayDate(dateStr) {
+                    if (dateStr === 'Unknown') return 'Unknown Date';
+                    try {
+                        const date = new Date(dateStr);
+                        const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+                        return date.toLocaleDateString(undefined, options);
+                    } catch {
+                        return dateStr;
                     }
                 }
             },

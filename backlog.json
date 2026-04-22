@@ -1,108 +1,318 @@
 {
-  "total_files": 14,
-  "total_duration_seconds": 31275.408332999996,
-  "total_file_size": 101136664582,
+  "total_files": 42,
+  "total_duration_seconds": 93826.22499899997,
+  "total_file_size": 303409993746,
   "files": [
     {
-      "timestamp": "2026-04-22T14:57:43.079372",
+      "timestamp": "2026-04-22T15:22:49.216404",
+      "recorded_date": "2026-04-18",
       "file_path": "E:\\recording\\atlascm2417\\2026-04-18\\0001_1776485398\\recording.mp4",
       "md5_first_1mb": "2924d97257dd5424bc2278bc2c1db58d",
       "duration_seconds": 1560.746667,
       "file_size": 5032199306
     },
     {
-      "timestamp": "2026-04-22T14:57:43.126969",
+      "timestamp": "2026-04-22T15:22:49.263012",
+      "recorded_date": "2026-04-18",
       "file_path": "E:\\recording\\atlascm2417\\2026-04-18\\0002_1776487163\\recording.mp4",
       "md5_first_1mb": "29dd74bb49703cd389d8162127b5a420",
       "duration_seconds": 1770.816,
       "file_size": 5706016680
     },
     {
-      "timestamp": "2026-04-22T14:57:43.189114",
+      "timestamp": "2026-04-22T15:22:49.326429",
+      "recorded_date": "2026-04-18",
       "file_path": "E:\\recording\\atlascm2417\\2026-04-18\\0003_1776489457\\recording.mp4",
       "md5_first_1mb": "94c37f16527473b74d57dba9600ac01c",
       "duration_seconds": 3001.611,
       "file_size": 9744936999
     },
     {
-      "timestamp": "2026-04-22T14:57:43.249529",
+      "timestamp": "2026-04-22T15:22:49.387586",
+      "recorded_date": "2026-04-18",
       "file_path": "E:\\recording\\atlascm2417\\2026-04-18\\0004_1776493886\\recording.mp4",
       "md5_first_1mb": "42b0e27784343dffefc88d9a37bf3035",
       "duration_seconds": 3091.392,
       "file_size": 9992826882
     },
     {
-      "timestamp": "2026-04-22T14:57:43.308338",
+      "timestamp": "2026-04-22T15:22:49.443885",
+      "recorded_date": "2026-04-17",
       "file_path": "E:\\recording\\atlascm2417\\2026-04-17\\0001_1776397619\\recording.mp4",
       "md5_first_1mb": "f0e37156137bc0e28eee901e822368f5",
       "duration_seconds": 2641.403333,
       "file_size": 8515743765
     },
     {
-      "timestamp": "2026-04-22T14:57:43.367476",
+      "timestamp": "2026-04-22T15:22:49.505008",
+      "recorded_date": "2026-04-17",
       "file_path": "E:\\recording\\atlascm2417\\2026-04-17\\0002_1776401682\\recording.mp4",
       "md5_first_1mb": "ba75af6a137c716ae0a47509f5f7ed10",
       "duration_seconds": 2641.387333,
       "file_size": 8533629251
     },
     {
-      "timestamp": "2026-04-22T14:57:43.427363",
+      "timestamp": "2026-04-22T15:22:49.561416",
+      "recorded_date": "2026-04-17",
       "file_path": "E:\\recording\\atlascm2417\\2026-04-17\\0003_1776407668\\recording.mp4",
       "md5_first_1mb": "9cb47b319a0ee0f39f8bfb764eed3027",
       "duration_seconds": 2701.269333,
       "file_size": 8760813726
     },
     {
-      "timestamp": "2026-04-22T14:57:43.487911",
+      "timestamp": "2026-04-22T15:22:49.625831",
+      "recorded_date": "2026-04-17",
       "file_path": "E:\\recording\\atlascm2417\\2026-04-17\\0004_1776411207\\recording.mp4",
       "md5_first_1mb": "068082a267f85f7200735f2a6d6b44ae",
       "duration_seconds": 2971.349333,
       "file_size": 9574981632
     },
     {
-      "timestamp": "2026-04-22T14:57:43.541461",
+      "timestamp": "2026-04-22T15:22:49.681289",
+      "recorded_date": "2026-04-16",
       "file_path": "E:\\recording\\atlascm2417\\2026-04-16\\0001_1776310012\\recording.mp4",
       "md5_first_1mb": "258e83fc69048ced57df5d91b6f2542a",
       "duration_seconds": 1800.832,
       "file_size": 5854320328
     },
     {
-      "timestamp": "2026-04-22T14:57:43.599589",
+      "timestamp": "2026-04-22T15:22:49.743701",
+      "recorded_date": "2026-04-16",
       "file_path": "E:\\recording\\atlascm2417\\2026-04-16\\0002_1776313361\\recording.mp4",
       "md5_first_1mb": "28b56ae1f0037dab75aaafd3ed686b1c",
       "duration_seconds": 1800.938667,
       "file_size": 5869843883
     },
     {
-      "timestamp": "2026-04-22T14:57:43.648659",
+      "timestamp": "2026-04-22T15:22:49.794470",
+      "recorded_date": "2026-04-16",
       "file_path": "E:\\recording\\atlascm2417\\2026-04-16\\0003_1776316271\\recording.mp4",
       "md5_first_1mb": "54314bd7bb9cebfe9bd2e5a7ab361b43",
       "duration_seconds": 1800.938667,
       "file_size": 5817544004
     },
     {
-      "timestamp": "2026-04-22T14:57:43.715384",
+      "timestamp": "2026-04-22T15:22:49.860827",
+      "recorded_date": "2026-04-16",
       "file_path": "E:\\recording\\atlascm2417\\2026-04-16\\0004_1776319016\\recording.mp4",
       "md5_first_1mb": "3027735dfd93bc66c75ac7685ff25d05",
       "duration_seconds": 1830.912,
       "file_size": 5894768968
     },
     {
-      "timestamp": "2026-04-22T14:57:43.781011",
+      "timestamp": "2026-04-22T15:22:49.916791",
+      "recorded_date": "2026-04-16",
       "file_path": "E:\\recording\\atlascm2417\\2026-04-16\\0005_1776322049\\recording.mp4",
       "md5_first_1mb": "505ac8919022b0a85018b6132d638722",
       "duration_seconds": 2401.204,
       "file_size": 7786729103
     },
     {
-      "timestamp": "2026-04-22T14:57:43.835948",
+      "timestamp": "2026-04-22T15:22:49.972068",
+      "recorded_date": "2026-04-16",
+      "file_path": "E:\\recording\\atlascm2417\\2026-04-16\\0006_1776325001\\recording.mp4",
+      "md5_first_1mb": "998506dd844258e598f7d353e14c0cc5",
+      "duration_seconds": 1260.608,
+      "file_size": 4052310055
+    },
+    {
+      "timestamp": "2026-04-22T15:39:14.169558",
+      "file_path": "E:\\recording\\atlascm2417\\2026-04-18\\0001_1776485398\\recording.mp4",
+      "md5_first_1mb": "2924d97257dd5424bc2278bc2c1db58d",
+      "duration_seconds": 1560.746667,
+      "file_size": 5032199306
+    },
+    {
+      "timestamp": "2026-04-22T15:39:14.250608",
+      "file_path": "E:\\recording\\atlascm2417\\2026-04-18\\0002_1776487163\\recording.mp4",
+      "md5_first_1mb": "29dd74bb49703cd389d8162127b5a420",
+      "duration_seconds": 1770.816,
+      "file_size": 5706016680
+    },
+    {
+      "timestamp": "2026-04-22T15:39:14.414018",
+      "file_path": "E:\\recording\\atlascm2417\\2026-04-18\\0003_1776489457\\recording.mp4",
+      "md5_first_1mb": "94c37f16527473b74d57dba9600ac01c",
+      "duration_seconds": 3001.611,
+      "file_size": 9744936999
+    },
+    {
+      "timestamp": "2026-04-22T15:39:14.549219",
+      "file_path": "E:\\recording\\atlascm2417\\2026-04-18\\0004_1776493886\\recording.mp4",
+      "md5_first_1mb": "42b0e27784343dffefc88d9a37bf3035",
+      "duration_seconds": 3091.392,
+      "file_size": 9992826882
+    },
+    {
+      "timestamp": "2026-04-22T15:39:14.672953",
+      "file_path": "E:\\recording\\atlascm2417\\2026-04-17\\0001_1776397619\\recording.mp4",
+      "md5_first_1mb": "f0e37156137bc0e28eee901e822368f5",
+      "duration_seconds": 2641.403333,
+      "file_size": 8515743765
+    },
+    {
+      "timestamp": "2026-04-22T15:39:14.793376",
+      "file_path": "E:\\recording\\atlascm2417\\2026-04-17\\0002_1776401682\\recording.mp4",
+      "md5_first_1mb": "ba75af6a137c716ae0a47509f5f7ed10",
+      "duration_seconds": 2641.387333,
+      "file_size": 8533629251
+    },
+    {
+      "timestamp": "2026-04-22T15:39:14.920803",
+      "file_path": "E:\\recording\\atlascm2417\\2026-04-17\\0003_1776407668\\recording.mp4",
+      "md5_first_1mb": "9cb47b319a0ee0f39f8bfb764eed3027",
+      "duration_seconds": 2701.269333,
+      "file_size": 8760813726
+    },
+    {
+      "timestamp": "2026-04-22T15:39:15.023225",
+      "file_path": "E:\\recording\\atlascm2417\\2026-04-17\\0004_1776411207\\recording.mp4",
+      "md5_first_1mb": "068082a267f85f7200735f2a6d6b44ae",
+      "duration_seconds": 2971.349333,
+      "file_size": 9574981632
+    },
+    {
+      "timestamp": "2026-04-22T15:39:15.112706",
+      "file_path": "E:\\recording\\atlascm2417\\2026-04-16\\0001_1776310012\\recording.mp4",
+      "md5_first_1mb": "258e83fc69048ced57df5d91b6f2542a",
+      "duration_seconds": 1800.832,
+      "file_size": 5854320328
+    },
+    {
+      "timestamp": "2026-04-22T15:39:15.206257",
+      "file_path": "E:\\recording\\atlascm2417\\2026-04-16\\0002_1776313361\\recording.mp4",
+      "md5_first_1mb": "28b56ae1f0037dab75aaafd3ed686b1c",
+      "duration_seconds": 1800.938667,
+      "file_size": 5869843883
+    },
+    {
+      "timestamp": "2026-04-22T15:39:15.300030",
+      "file_path": "E:\\recording\\atlascm2417\\2026-04-16\\0003_1776316271\\recording.mp4",
+      "md5_first_1mb": "54314bd7bb9cebfe9bd2e5a7ab361b43",
+      "duration_seconds": 1800.938667,
+      "file_size": 5817544004
+    },
+    {
+      "timestamp": "2026-04-22T15:39:15.387955",
+      "file_path": "E:\\recording\\atlascm2417\\2026-04-16\\0004_1776319016\\recording.mp4",
+      "md5_first_1mb": "3027735dfd93bc66c75ac7685ff25d05",
+      "duration_seconds": 1830.912,
+      "file_size": 5894768968
+    },
+    {
+      "timestamp": "2026-04-22T15:39:15.539693",
+      "file_path": "E:\\recording\\atlascm2417\\2026-04-16\\0005_1776322049\\recording.mp4",
+      "md5_first_1mb": "505ac8919022b0a85018b6132d638722",
+      "duration_seconds": 2401.204,
+      "file_size": 7786729103
+    },
+    {
+      "timestamp": "2026-04-22T15:39:15.628881",
+      "file_path": "E:\\recording\\atlascm2417\\2026-04-16\\0006_1776325001\\recording.mp4",
+      "md5_first_1mb": "998506dd844258e598f7d353e14c0cc5",
+      "duration_seconds": 1260.608,
+      "file_size": 4052310055
+    },
+    {
+      "timestamp": "2026-04-22T15:40:47.120009",
+      "file_path": "E:\\recording\\atlascm2417\\2026-04-18\\0001_1776485398\\recording.mp4",
+      "md5_first_1mb": "2924d97257dd5424bc2278bc2c1db58d",
+      "duration_seconds": 1560.746667,
+      "file_size": 5032199306
+    },
+    {
+      "timestamp": "2026-04-22T15:40:47.192007",
+      "file_path": "E:\\recording\\atlascm2417\\2026-04-18\\0002_1776487163\\recording.mp4",
+      "md5_first_1mb": "29dd74bb49703cd389d8162127b5a420",
+      "duration_seconds": 1770.816,
+      "file_size": 5706016680
+    },
+    {
+      "timestamp": "2026-04-22T15:40:47.305654",
+      "file_path": "E:\\recording\\atlascm2417\\2026-04-18\\0003_1776489457\\recording.mp4",
+      "md5_first_1mb": "94c37f16527473b74d57dba9600ac01c",
+      "duration_seconds": 3001.611,
+      "file_size": 9744936999
+    },
+    {
+      "timestamp": "2026-04-22T15:40:47.406482",
+      "file_path": "E:\\recording\\atlascm2417\\2026-04-18\\0004_1776493886\\recording.mp4",
+      "md5_first_1mb": "42b0e27784343dffefc88d9a37bf3035",
+      "duration_seconds": 3091.392,
+      "file_size": 9992826882
+    },
+    {
+      "timestamp": "2026-04-22T15:40:47.518419",
+      "file_path": "E:\\recording\\atlascm2417\\2026-04-17\\0001_1776397619\\recording.mp4",
+      "md5_first_1mb": "f0e37156137bc0e28eee901e822368f5",
+      "duration_seconds": 2641.403333,
+      "file_size": 8515743765
+    },
+    {
+      "timestamp": "2026-04-22T15:40:47.633710",
+      "file_path": "E:\\recording\\atlascm2417\\2026-04-17\\0002_1776401682\\recording.mp4",
+      "md5_first_1mb": "ba75af6a137c716ae0a47509f5f7ed10",
+      "duration_seconds": 2641.387333,
+      "file_size": 8533629251
+    },
+    {
+      "timestamp": "2026-04-22T15:40:47.747456",
+      "file_path": "E:\\recording\\atlascm2417\\2026-04-17\\0003_1776407668\\recording.mp4",
+      "md5_first_1mb": "9cb47b319a0ee0f39f8bfb764eed3027",
+      "duration_seconds": 2701.269333,
+      "file_size": 8760813726
+    },
+    {
+      "timestamp": "2026-04-22T15:40:47.855114",
+      "file_path": "E:\\recording\\atlascm2417\\2026-04-17\\0004_1776411207\\recording.mp4",
+      "md5_first_1mb": "068082a267f85f7200735f2a6d6b44ae",
+      "duration_seconds": 2971.349333,
+      "file_size": 9574981632
+    },
+    {
+      "timestamp": "2026-04-22T15:40:47.952876",
+      "file_path": "E:\\recording\\atlascm2417\\2026-04-16\\0001_1776310012\\recording.mp4",
+      "md5_first_1mb": "258e83fc69048ced57df5d91b6f2542a",
+      "duration_seconds": 1800.832,
+      "file_size": 5854320328
+    },
+    {
+      "timestamp": "2026-04-22T15:40:48.049538",
+      "file_path": "E:\\recording\\atlascm2417\\2026-04-16\\0002_1776313361\\recording.mp4",
+      "md5_first_1mb": "28b56ae1f0037dab75aaafd3ed686b1c",
+      "duration_seconds": 1800.938667,
+      "file_size": 5869843883
+    },
+    {
+      "timestamp": "2026-04-22T15:40:48.177938",
+      "file_path": "E:\\recording\\atlascm2417\\2026-04-16\\0003_1776316271\\recording.mp4",
+      "md5_first_1mb": "54314bd7bb9cebfe9bd2e5a7ab361b43",
+      "duration_seconds": 1800.938667,
+      "file_size": 5817544004
+    },
+    {
+      "timestamp": "2026-04-22T15:40:48.282835",
+      "file_path": "E:\\recording\\atlascm2417\\2026-04-16\\0004_1776319016\\recording.mp4",
+      "md5_first_1mb": "3027735dfd93bc66c75ac7685ff25d05",
+      "duration_seconds": 1830.912,
+      "file_size": 5894768968
+    },
+    {
+      "timestamp": "2026-04-22T15:40:48.403186",
+      "file_path": "E:\\recording\\atlascm2417\\2026-04-16\\0005_1776322049\\recording.mp4",
+      "md5_first_1mb": "505ac8919022b0a85018b6132d638722",
+      "duration_seconds": 2401.204,
+      "file_size": 7786729103
+    },
+    {
+      "timestamp": "2026-04-22T15:40:48.502315",
       "file_path": "E:\\recording\\atlascm2417\\2026-04-16\\0006_1776325001\\recording.mp4",
       "md5_first_1mb": "998506dd844258e598f7d353e14c0cc5",
       "duration_seconds": 1260.608,
       "file_size": 4052310055
     }
   ],
-  "last_updated": "2026-04-22T14:57:43.844097",
-  "total_duration_formatted": "8h 41m 15s",
-  "total_file_size_mb": 96451.44
+  "last_updated": "2026-04-22T15:40:48.510178",
+  "total_duration_formatted": "26h 3m 46s",
+  "total_file_size_mb": 289354.32
 }

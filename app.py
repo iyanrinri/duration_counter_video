@@ -4,6 +4,7 @@ import subprocess
 import os
 import sys
 import hashlib
+import re
 from pathlib import Path
 from datetime import datetime
 import psutil
@@ -51,14 +52,28 @@ def get_data():
     }
 
 
+def extract_date_from_path(file_path):
+    """Extract YYYY-MM-DD from file path"""
+    if not file_path:
+        return None
+    match = re.search(r'(\d{4}-\d{2}-\d{2})', file_path)
+    if match:
+        return match.group(1)
+    return None
+
+
 def group_by_date(metadata):
     """Group metadata by date"""
     grouped = {}
     
     for item in metadata:
         try:
-            # Extract date from timestamp
-            date_str = item.get('timestamp', '').split('T')[0]  # Format: YYYY-MM-DD
+            # Extract date from path first, fallback to timestamp
+            date_str = extract_date_from_path(item.get('file_path', ''))
+            
+            if not date_str:
+                # Fallback to scan timestamp (YYYY-MM-DD)
+                date_str = item.get('timestamp', '').split('T')[0]
             
             if not date_str:
                 date_str = 'Unknown'
@@ -164,6 +179,7 @@ def process_file(file_path):
 
         metadata = {
             "timestamp": current_time,
+            "recorded_date": extract_date_from_path(file_path),
             "file_path": file_path,
             "file_size": file_size,
             "md5_first_1mb": md5_hash,
@@ -214,6 +230,7 @@ def update_backlog(metadata):
         # Add file entry
         backlog["files"].append({
             "timestamp": metadata["timestamp"],
+            "recorded_date": metadata.get("recorded_date"),
             "file_path": metadata["file_path"],
             "md5_first_1mb": metadata["md5_first_1mb"],
             "duration_seconds": metadata["duration_seconds"],
