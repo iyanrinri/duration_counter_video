@@ -122,7 +122,7 @@ def group_by_date(metadata):
         hours = int(total_sec // 3600)
         minutes = int((total_sec % 3600) // 60)
         seconds = int(total_sec % 60)
-        group["total_duration_formatted"] = f"{hours}h {minutes}m {seconds}s"
+        group["total_duration_formatted"] = f"{hours} Jam {minutes} Menit"
     
     return sorted_grouped
 
@@ -288,7 +288,7 @@ def update_backlog(metadata):
         minutes = int((total_seconds % 3600) // 60)
         seconds = int(total_seconds % 60)
         
-        backlog["total_duration_formatted"] = f"{hours}h {minutes}m {seconds}s"
+        backlog["total_duration_formatted"] = f"{hours} Jam {minutes} Menit"
         backlog["total_file_size_mb"] = round(backlog["total_file_size"] / (1024 * 1024), 2)
         
         # Save backlog

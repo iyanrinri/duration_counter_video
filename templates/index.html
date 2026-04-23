@@ -390,6 +390,61 @@
                 margin-top: -20px;
             }
         }
+
+        /* Copy Button Styles */
+        .copy-btn {
+            background: none;
+            border: none;
+            padding: 4px;
+            margin-left: 8px;
+            cursor: pointer;
+            color: #667eea;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 4px;
+            transition: all 0.2s;
+            vertical-align: middle;
+        }
+
+        .copy-btn:hover {
+            background: #f0f1f5;
+            color: #764ba2;
+        }
+
+        .copy-btn svg {
+            width: 14px;
+            height: 14px;
+        }
+
+        .summary-card .value {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .summary-card .copy-btn {
+            color: #667eea;
+            opacity: 0.6;
+        }
+
+        .summary-card:hover .copy-btn {
+            opacity: 1;
+        }
+
+        .toast {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(0, 0, 0, 0.8);
+            color: white;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 14px;
+            z-index: 1000;
+            pointer-events: none;
+        }
     </style>
 </head>
 <body>
@@ -424,11 +479,21 @@
                 <div class="summary" v-if="hasData">
                     <div class="summary-card">
                         <h3>Total Files</h3>
-                        <div class="value">{{ backlog.total_files || 0 }}</div>
+                        <div class="value">
+                            <span>{{ backlog.total_files || 0 }}</span>
+                            <button class="copy-btn" title="Copy Count" @click.stop="copyToClipboard(backlog.total_files || 0)">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+                            </button>
+                        </div>
                     </div>
                     <div class="summary-card">
                         <h3>Total Duration</h3>
-                        <div class="value">{{ backlog.total_duration_formatted || '0h 0m 0s' }}</div>
+                        <div class="value">
+                            <span>{{ backlog.total_duration_formatted || '0 Jam 0 Menit' }}</span>
+                            <button class="copy-btn" title="Copy Duration" @click.stop="copyToClipboard(backlog.total_duration_formatted || '0 Jam 0 Menit')">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+                            </button>
+                        </div>
                     </div>
                     <div class="summary-card">
                         <h3>Total Size</h3>
@@ -464,8 +529,18 @@
                                 <div class="date-info">
                                     <div class="date-title">{{ formatDisplayDate(date) }}</div>
                                     <div class="date-stats">
-                                        <span class="stat-badge">{{ group.file_count }} files</span>
-                                        <span class="stat-badge">{{ group.total_duration_formatted }}</span>
+                                        <span class="stat-badge">
+                                            {{ group.file_count }} files
+                                            <button class="copy-btn" style="padding: 0; margin-left: 4px;" title="Copy Count" @click.stop="copyToClipboard(group.file_count)">
+                                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+                                            </button>
+                                        </span>
+                                        <span class="stat-badge">
+                                            {{ group.total_duration_formatted }}
+                                            <button class="copy-btn" style="padding: 0; margin-left: 4px;" title="Copy Duration" @click.stop="copyToClipboard(group.total_duration_formatted)">
+                                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+                                            </button>
+                                        </span>
                                     </div>
                                 </div>
                                 <div class="expand-icon">
@@ -504,6 +579,13 @@
                 </div>
             </div>
         </div>
+
+        <!-- Toast Notification -->
+        <transition name="fade">
+            <div v-if="toastMessage" class="toast">
+                {{ toastMessage }}
+            </div>
+        </transition>
     </div>
 
     <script>
@@ -519,6 +601,7 @@
                     isLoading: false,
                     statusMessage: '',
                     statusType: '',
+                    toastMessage: '',
                 };
             },
             computed: {
@@ -653,11 +736,25 @@
                     return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
                 },
                 formatDuration(seconds) {
-                    if (!seconds) return '0h 0m 0s';
+                    if (!seconds) return '0 Jam 0 Menit';
                     const h = Math.floor(seconds / 3600);
                     const m = Math.floor((seconds % 3600) / 60);
-                    const s = Math.floor(seconds % 60);
-                    return `${h}h ${m}m ${s}s`;
+                    return `${h} Jam ${m} Menit`;
+                },
+                copyToClipboard(text) {
+                    if (!text && text !== 0) return;
+                    
+                    const el = document.createElement('textarea');
+                    el.value = text.toString();
+                    document.body.appendChild(el);
+                    el.select();
+                    document.execCommand('copy');
+                    document.body.removeChild(el);
+                    
+                    this.toastMessage = `Copied: ${text}`;
+                    setTimeout(() => {
+                        this.toastMessage = '';
+                    }, 2000);
                 },
                 formatDate(dateString) {
                     if (!dateString) return '';
