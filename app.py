@@ -21,6 +21,7 @@ TEMPLATE_FILE = BASE_DIR / "templates" / "index.html"
 # Configuration
 FIRST_MB = 1024 * 1024  # 1MB in bytes
 SEARCH_FILENAME = "recording.mp4"
+MIN_DURATION_SECONDS = 300  # 5 minutes
 
 
 def get_data():
@@ -63,16 +64,33 @@ def extract_date_from_path(file_path):
 
 
 def group_by_date(metadata):
-    """Group metadata by date"""
+    """Group metadata by date with filename-specific priority"""
     grouped = {}
+    search_name = SEARCH_FILENAME.lower()
     
     for item in metadata:
         try:
-            # Extract date from path first, fallback to timestamp
-            date_str = extract_date_from_path(item.get('file_path', ''))
+            file_path = item.get('file_path', '')
+            file_name = os.path.basename(file_path).lower()
             
+            date_str = None
+            
+            # Logic: recording.mp4 uses folder date, others use modified date
+            if file_name == search_name:
+                # Prioritize date from folder path
+                date_str = extract_date_from_path(file_path)
+                if not date_str:
+                    # Fallback to modification date
+                    date_str = item.get('file_modified_at', '').split('T')[0]
+            else:
+                # Prioritize modification date for other files (DCIM, etc.)
+                date_str = item.get('file_modified_at', '').split('T')[0]
+                if not date_str:
+                    # Fallback to date from folder path
+                    date_str = extract_date_from_path(file_path)
+            
+            # Final fallback to scan timestamp
             if not date_str:
-                # Fallback to scan timestamp (YYYY-MM-DD)
                 date_str = item.get('timestamp', '').split('T')[0]
             
             if not date_str:
@@ -152,7 +170,7 @@ def get_video_duration(file_path):
 
 
 def find_recording_files(drive_path):
-    """Find recording.mp4 files in drive"""
+    """Find recording.mp4 or any .mp4 files if in DCIM folder"""
     files_found = []
     search_name = SEARCH_FILENAME.lower()
     print(f"Searching in: {drive_path}")
@@ -160,10 +178,22 @@ def find_recording_files(drive_path):
     # Menggunakan os.walk karena lebih tahan terhadap PermissionError (folder tidak bisa diakses)
     # dibandingkan path.rglob("*") yang bisa crash di tengah jalan
     for root, dirs, files in os.walk(drive_path):
+        # Check if "DCIM" is in any part of the current path
+        path_parts = root.upper().replace('\\', '/').split('/')
+        is_dcim = "DCIM" in path_parts
+        
         for file in files:
-            if file.lower() == search_name:
-                full_path = os.path.join(root, file)
-                files_found.append(full_path)
+            file_lower = file.lower()
+            if is_dcim:
+                # If inside a DCIM folder, take all .mp4 files
+                if file_lower.endswith(".mp4"):
+                    full_path = os.path.join(root, file)
+                    files_found.append(full_path)
+            else:
+                # Otherwise, only take the specific recording file
+                if file_lower == search_name:
+                    full_path = os.path.join(root, file)
+                    files_found.append(full_path)
                 
     return files_found
 
@@ -178,12 +208,23 @@ def process_file(file_path):
 
         md5_hash = get_md5_first_mb(file_path)
         duration = get_video_duration(file_path)
+        
+        # Filter videos shorter than 5 minutes
+        if duration is not None and duration < MIN_DURATION_SECONDS:
+            print(f"Skipping: {file_path} (Duration too short: {duration}s)")
+            return None
+
         file_size = os.path.getsize(file_path)
         current_time = datetime.now().isoformat()
+        
+        # Get file modification time
+        mtime = os.path.getmtime(file_path)
+        modified_at = datetime.fromtimestamp(mtime).isoformat()
 
         metadata = {
             "timestamp": current_time,
             "recorded_date": extract_date_from_path(file_path),
+            "file_modified_at": modified_at,
             "file_path": file_path,
             "file_size": file_size,
             "md5_first_1mb": md5_hash,
