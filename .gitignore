@@ -1,0 +1,26 @@
+# Environment Variables
+.env
+
+# Data Files
+*.json
+*.jsonl
+recording_metadata.jsonl
+backlog.json
+
+# Python Virtual Environment
+venv/
+env/
+.venv/
+
+# Python Cache
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# IDE & OS Files
+.vscode/
+.idea/
+*.swp
+.DS_Store
+Thumbs.db

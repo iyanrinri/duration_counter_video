@@ -7,6 +7,10 @@ from datetime import datetime
 from pathlib import Path
 import psutil
 import threading
+from dotenv import load_dotenv
+
+# Load env variables
+load_dotenv()
 
 # Configuration
 LOG_FILE = "recording_metadata.jsonl"
@@ -14,6 +18,17 @@ CHECK_INTERVAL = 5  # seconds
 FIRST_MB = 1024 * 1024  # 1MB in bytes
 SEARCH_FILENAME = "recording.mp4"  # Exact filename only
 MIN_DURATION_SECONDS = 300  # 5 minutes
+
+# Setup exclude drives from .env
+EXCLUDE_DRIVES_ENV = os.getenv("EXCLUDE_DRIVES", "")
+EXCLUDE_DRIVES = set()
+for d in EXCLUDE_DRIVES_ENV.split(","):
+    d = d.strip().upper()
+    if d:
+        # Normalize drive letters to have trailing slash
+        if not d.endswith("\\") and not d.endswith("/"):
+            d += "\\"
+        EXCLUDE_DRIVES.add(d)
 
 # Track drives yang sudah pernah dilihat
 previous_drives = set()
@@ -207,7 +222,10 @@ def get_connected_drives():
     """Get list of connected drives/partitions"""
     drives = set()
     for partition in psutil.disk_partitions():
-        drives.add(partition.mountpoint)
+        drive_mount = partition.mountpoint
+        if drive_mount.upper() in EXCLUDE_DRIVES:
+            continue
+        drives.add(drive_mount)
     return drives
 
 

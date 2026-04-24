@@ -8,6 +8,10 @@ import re
 from pathlib import Path
 from datetime import datetime
 import psutil
+from dotenv import load_dotenv
+
+# Load env variables
+load_dotenv()
 
 app = Flask(__name__)
 
@@ -22,6 +26,18 @@ TEMPLATE_FILE = BASE_DIR / "templates" / "index.html"
 FIRST_MB = 1024 * 1024  # 1MB in bytes
 SEARCH_FILENAME = "recording.mp4"
 MIN_DURATION_SECONDS = 300  # 5 minutes
+
+# Setup exclude drives from .env
+EXCLUDE_DRIVES_ENV = os.getenv("EXCLUDE_DRIVES", "")
+EXCLUDE_DRIVES = set()
+for d in EXCLUDE_DRIVES_ENV.split(","):
+    d = d.strip().upper()
+    if d:
+        # Normalize drive letters to have trailing slash
+        if not d.endswith("\\") and not d.endswith("/"):
+            d += "\\"
+        EXCLUDE_DRIVES.add(d)
+
 
 
 def get_data():
@@ -310,7 +326,11 @@ def scan_all_drives():
         # Get all drives
         drives = set()
         for partition in psutil.disk_partitions():
-            drives.add(partition.mountpoint)
+            drive_mount = partition.mountpoint
+            if drive_mount.upper() in EXCLUDE_DRIVES:
+                print(f"Skipping excluded drive: {drive_mount}")
+                continue
+            drives.add(drive_mount)
         
         files_found = 0
         files_processed = 0
