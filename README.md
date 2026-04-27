@@ -11,21 +11,15 @@ Script Python yang monitor drive USB/SD Card dan otomatis cari file `recording.m
 
 ## Persiapan:
 
-### 1. Setup Virtual Environment & Install Dependencies
-Jalankan script setup untuk membuat virtual environment dan menginstall library yang dibutuhkan (hanya perlu dijalankan sekali):
-- **Windows**: Klik dua kali file `setup_venv.bat`
+### Run on Windows
+1. Jalankan `setup_venv.bat` (hanya sekali).
+2. Jalankan `run_app.bat` untuk membuka dashboard web.
+3. (Opsional) Jalankan `monitor_drives.py` di background untuk pemindaian otomatis.
 
-Atau jika ingin setup manual melalui terminal:
-```bash
-python -m venv venv
-
-# Aktifkan venv:
-venv\Scripts\activate.bat   # Windows
-# source venv/bin/activate  # Mac/Linux
-
-# Install dependencies:
-pip install -r requirements.txt
-```
+### Run on macOS
+1. Buka Terminal di folder ini.
+2. Jalankan `bash setup_mac.sh` (hanya sekali).
+3. Jalankan `bash run_app_mac.sh` untuk membuka dashboard web.
 
 ### 2. Install FFmpeg (untuk mendapat durasi video)
 **Pilihan A - Menggunakan Winget (Windows):**

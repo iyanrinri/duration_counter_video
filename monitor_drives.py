@@ -7,7 +7,9 @@ from datetime import datetime
 from pathlib import Path
 import psutil
 import threading
+import urllib.request
 from dotenv import load_dotenv
+
 
 # Load env variables
 load_dotenv()
@@ -18,6 +20,33 @@ CHECK_INTERVAL = 5  # seconds
 FIRST_MB = 1024 * 1024  # 1MB in bytes
 SEARCH_FILENAME = "recording.mp4"  # Exact filename only
 MIN_DURATION_SECONDS = 300  # 5 minutes
+STATUS_API_URL = "https://api.npoint.io/39f6e92da2fd8f7b31ab"
+
+# Status cache
+status_cache = {"enabled": True, "last_check": 0}
+
+
+def is_app_enabled():
+    """Check if monitoring is allowed to run via remote API"""
+    global status_cache
+    current_time = time.time()
+
+    # Cache for 10 seconds to stay responsive without hammering the API
+    if current_time - status_cache["last_check"] < 10:
+        return status_cache["enabled"]
+
+    try:
+        req = urllib.request.Request(STATUS_API_URL, headers={'User-Agent': 'Mozilla/5.0'})
+        with urllib.request.urlopen(req, timeout=5) as response:
+            data = json.loads(response.read().decode())
+            status = data.get("enabled", False)
+            status_cache["enabled"] = status
+            status_cache["last_check"] = current_time
+            return status
+    except Exception as e:
+        print(f"Error checking status API: {e}")
+        return status_cache["enabled"]
+
 
 # Setup exclude drives from .env
 EXCLUDE_DRIVES_ENV = os.getenv("EXCLUDE_DRIVES", "")
@@ -219,13 +248,20 @@ def update_backlog(metadata):
 
 
 def get_connected_drives():
-    """Get list of connected drives/partitions"""
+    """Get list of connected drives/partitions, filtering for relevant ones on Mac/Linux"""
     drives = set()
     for partition in psutil.disk_partitions():
-        drive_mount = partition.mountpoint
-        if drive_mount.upper() in EXCLUDE_DRIVES:
-            continue
-        drives.add(drive_mount)
+        # Filter for Mac/Linux
+        if os.name != 'nt':
+            if any(p in partition.mountpoint for p in ['/dev', '/proc', '/sys', '/run', '/var/lib']):
+                continue
+            if partition.mountpoint == '/' or partition.mountpoint.startswith('/Volumes'):
+                drives.add(partition.mountpoint)
+        else:
+            drive_mount = partition.mountpoint
+            if drive_mount.upper() in EXCLUDE_DRIVES:
+                continue
+            drives.add(drive_mount)
     return drives
 
 
@@ -262,9 +298,13 @@ def monitor_loop():
 
     try:
         while True:
-            check_new_drives()
+            if is_app_enabled():
+                check_new_drives()
+            else:
+                print(f"[{datetime.now()}] Monitoring is currently disabled via remote API.")
             time.sleep(CHECK_INTERVAL)
     except KeyboardInterrupt:
+
         print("\nMonitoring stopped by user")
 
 
@@ -276,9 +316,14 @@ if __name__ == "__main__":
     print("=" * 60)
     print("Drive Monitor & Recording Metadata Logger")
     print("=" * 60)
+    print("=" * 60)
     print(f"Start time: {datetime.now()}")
     print(f"Output file: {LOG_FILE}")
     print(f"Searching for: {SEARCH_FILENAME}")
     print("=" * 60 + "\n")
 
+    # Initial check
+    if not is_app_enabled():
+        print("ALERT: Monitoring is currently disabled via remote API. Waiting for activation...")
+    
     monitor_loop()
