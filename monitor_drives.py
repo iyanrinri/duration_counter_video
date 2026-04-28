@@ -140,7 +140,7 @@ def find_recording_files(drive_path):
     return files_found
 
 
-def process_file(file_path):
+def process_file(file_path, drive_name="Unknown Drive"):
     """Process single recording file"""
     try:
         if not os.path.exists(file_path):
@@ -167,6 +167,7 @@ def process_file(file_path):
             "timestamp": current_time,
             "file_modified_at": modified_at,
             "file_path": file_path,
+            "drive_name": drive_name,
             "file_size": file_size,
             "md5_first_1mb": md5_hash,
             "duration_seconds": duration,
@@ -224,6 +225,7 @@ def update_backlog(metadata):
         backlog["files"].append({
             "timestamp": metadata["timestamp"],
             "file_path": metadata["file_path"],
+            "drive_name": metadata.get("drive_name", "Unknown Drive"),
             "md5_first_1mb": metadata["md5_first_1mb"],
             "duration_seconds": metadata["duration_seconds"],
             "file_size": metadata["file_size"]
@@ -274,14 +276,21 @@ def check_new_drives():
 
     if new_drives:
         print(f"\n[{datetime.now()}] New drive(s) detected: {new_drives}")
-        for drive in new_drives:
-            print(f"Scanning {drive}...")
+        
+        # Sort drives to have consistent numbering during this detection cycle
+        sorted_new_drives = sorted(list(new_drives))
+        
+        for i, drive in enumerate(sorted_new_drives, 1):
+            # Create friendly name like New-001 (D:)
+            drive_label = f"New-{i:03d} ({drive.strip('\\/')})"
+            
+            print(f"Scanning {drive} as {drive_label}...")
             files = find_recording_files(drive)
 
             if files:
                 print(f"Found {len(files)} recording file(s)")
                 for file_path in files:
-                    metadata = process_file(file_path)
+                    metadata = process_file(file_path, drive_name=drive_label)
                     if metadata:
                         log_metadata(metadata)
             else:

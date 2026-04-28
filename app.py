@@ -227,41 +227,46 @@ def extract_date_from_path(file_path):
     return None
 
 
-def group_by_date(metadata):
-    """Group metadata by date with filename-specific priority"""
-    grouped = {}
+def group_by_drive_and_date(metadata):
+    """Group metadata by Drive Name and then by Date"""
+    drive_groups = {}
     search_name = SEARCH_FILENAME.lower()
     
     for item in metadata:
         try:
+            drive_name = item.get('drive_name', 'Unknown Drive')
             file_path = item.get('file_path', '')
             file_name = os.path.basename(file_path).lower()
             
+            # 1. Determine Date
             date_str = None
-            
-            # Logic: recording.mp4 uses folder date, others use modified date
             if file_name == search_name:
-                # Prioritize date from folder path
                 date_str = extract_date_from_path(file_path)
                 if not date_str:
-                    # Fallback to modification date
                     date_str = item.get('file_modified_at', '').split('T')[0]
             else:
-                # Prioritize modification date for other files (DCIM, etc.)
                 date_str = item.get('file_modified_at', '').split('T')[0]
                 if not date_str:
-                    # Fallback to date from folder path
                     date_str = extract_date_from_path(file_path)
             
-            # Final fallback to scan timestamp
             if not date_str:
                 date_str = item.get('timestamp', '').split('T')[0]
-            
             if not date_str:
                 date_str = 'Unknown'
             
-            if date_str not in grouped:
-                grouped[date_str] = {
+            # 2. Structure: drive_groups[drive_name][dates][date_str]
+            if drive_name not in drive_groups:
+                drive_groups[drive_name] = {
+                    "drive_name": drive_name,
+                    "total_duration_seconds": 0,
+                    "total_file_size": 0,
+                    "file_count": 0,
+                    "dates": {}
+                }
+            
+            drive_obj = drive_groups[drive_name]
+            if date_str not in drive_obj["dates"]:
+                drive_obj["dates"][date_str] = {
                     "date": date_str,
                     "files": [],
                     "total_duration_seconds": 0,
@@ -269,26 +274,47 @@ def group_by_date(metadata):
                     "file_count": 0
                 }
             
-            grouped[date_str]["files"].append(item)
-            grouped[date_str]["total_duration_seconds"] += item.get("duration_seconds", 0) or 0
-            grouped[date_str]["total_file_size"] += item.get("file_size", 0)
-            grouped[date_str]["file_count"] += 1
+            date_obj = drive_obj["dates"][date_str]
+            
+            # Add file to date group
+            date_obj["files"].append(item)
+            date_obj["total_duration_seconds"] += item.get("duration_seconds", 0) or 0
+            date_obj["total_file_size"] += item.get("file_size", 0)
+            date_obj["file_count"] += 1
+            
+            # Add to drive totals
+            drive_obj["total_duration_seconds"] += item.get("duration_seconds", 0) or 0
+            drive_obj["total_file_size"] += item.get("file_size", 0)
+            drive_obj["file_count"] += 1
+            
         except Exception as e:
             print(f"Error grouping item: {e}")
     
-    # Sort by date descending (newest first)
-    sorted_grouped = dict(sorted(grouped.items(), reverse=True))
+    # Sort and Format
+    # 1. Sort drives by name
+    sorted_drives = dict(sorted(drive_groups.items()))
     
-    # Format duration for each group
-    for date_key in sorted_grouped:
-        group = sorted_grouped[date_key]
-        total_sec = group["total_duration_seconds"]
-        hours = int(total_sec // 3600)
-        minutes = int((total_sec % 3600) // 60)
-        seconds = int(total_sec % 60)
-        group["total_duration_formatted"] = f"{hours} Jam {minutes} Menit"
-    
-    return sorted_grouped
+    for drive_name, drive_obj in sorted_drives.items():
+        # Format drive duration
+        drive_obj["total_duration_formatted"] = format_seconds(drive_obj["total_duration_seconds"])
+        
+        # 2. Sort dates within drive (newest first)
+        sorted_dates = dict(sorted(drive_obj["dates"].items(), reverse=True))
+        
+        for date_str, date_obj in sorted_dates.items():
+            # Format date duration
+            date_obj["total_duration_formatted"] = format_seconds(date_obj["total_duration_seconds"])
+            
+        drive_obj["dates"] = sorted_dates
+        
+    return sorted_drives
+
+
+def format_seconds(total_sec):
+    """Format seconds to Jam/Menit string"""
+    hours = int(total_sec // 3600)
+    minutes = int((total_sec % 3600) // 60)
+    return f"{hours} Jam {minutes} Menit"
 
 
 def get_md5_first_mb(file_path):
@@ -362,7 +388,7 @@ def find_recording_files(drive_path):
     return files_found
 
 
-def process_file(file_path):
+def process_file(file_path, drive_name="Unknown Drive"):
     """Process single recording file"""
     try:
         if not os.path.exists(file_path):
@@ -390,6 +416,7 @@ def process_file(file_path):
             "recorded_date": extract_date_from_path(file_path),
             "file_modified_at": modified_at,
             "file_path": file_path,
+            "drive_name": drive_name,
             "file_size": file_size,
             "md5_first_1mb": md5_hash,
             "duration_seconds": duration,
@@ -441,6 +468,7 @@ def update_backlog(metadata):
             "timestamp": metadata["timestamp"],
             "recorded_date": metadata.get("recorded_date"),
             "file_path": metadata["file_path"],
+            "drive_name": metadata.get("drive_name", "Unknown Drive"),
             "md5_first_1mb": metadata["md5_first_1mb"],
             "duration_seconds": metadata["duration_seconds"],
             "file_size": metadata["file_size"]
@@ -490,16 +518,20 @@ def scan_all_drives():
         files_found = 0
         files_processed = 0
         
-        for drive in drives:
+        # Sort drives for consistent numbering
+        sorted_drives = sorted(list(drives))
+        
+        for i, drive in enumerate(sorted_drives, 1):
             try:
-                print(f"Scanning {drive}...")
+                drive_label = f"New-{i:03d} ({drive.strip('\\/')})"
+                print(f"Scanning {drive} as {drive_label}...")
                 files = find_recording_files(drive)
                 
                 if files:
                     files_found += len(files)
                     print(f"Found {len(files)} recording file(s) in {drive}")
                     for file_path in files:
-                        metadata = process_file(file_path)
+                        metadata = process_file(file_path, drive_name=drive_label)
                         if metadata:
                             log_metadata(metadata)
                             files_processed += 1
@@ -529,7 +561,7 @@ def index():
 def get_api_data():
     """Get current data from JSON files"""
     data = get_data()
-    data['grouped'] = group_by_date(data['metadata'])
+    data['grouped'] = group_by_drive_and_date(data['metadata'])
     return jsonify(data)
 
 
