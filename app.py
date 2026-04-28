@@ -8,7 +8,10 @@ import re
 from pathlib import Path
 from datetime import datetime
 import psutil
+import urllib.request
+import time
 from dotenv import load_dotenv
+
 
 # Load env variables
 load_dotenv()
@@ -26,6 +29,151 @@ TEMPLATE_FILE = BASE_DIR / "templates" / "index.html"
 FIRST_MB = 1024 * 1024  # 1MB in bytes
 SEARCH_FILENAME = "recording.mp4"
 MIN_DURATION_SECONDS = 300  # 5 minutes
+STATUS_API_URL = "https://api.npoint.io/39f6e92da2fd8f7b31ab"
+
+# App status cache
+app_status_cache = {
+    "enabled": True,
+    "last_check": 0
+}
+
+
+def is_app_enabled():
+    """Check if application is allowed to run via remote API"""
+    global app_status_cache
+    current_time = time.time()
+    
+    try:
+        req = urllib.request.Request(STATUS_API_URL, headers={'User-Agent': 'Mozilla/5.0'})
+        with urllib.request.urlopen(req, timeout=5) as response:
+            data = json.loads(response.read().decode())
+            status = data.get("enabled", False)
+            app_status_cache["enabled"] = status
+            app_status_cache["last_check"] = current_time
+            return status
+    except Exception as e:
+        print(f"Error checking app status: {e}")
+        # If API is down, default to last known state
+        return app_status_cache["enabled"]
+
+
+@app.before_request
+def check_status():
+    """Intercept requests to check if app is enabled"""
+    if not is_app_enabled():
+        from flask import request
+        if request.path.startswith('/api/'):
+            return jsonify({
+                "status": "error",
+                "message": "Application is currently disabled by administrator."
+            }), 403
+        
+        # Return a premium HTML error for browser requests
+        return """
+        <!DOCTYPE html>
+        <html lang="id">
+        <head>
+            <meta charset="UTF-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+            <title>Akses Dibatasi | Duration Counter</title>
+            <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600&display=swap" rel="stylesheet">
+            <style>
+                :root {
+                    --primary: #6366f1;
+                    --secondary: #a855f7;
+                    --dark: #0f172a;
+                }
+                body { 
+                    font-family: 'Outfit', sans-serif; 
+                    background: var(--dark);
+                    background-image: 
+                        radial-gradient(at 0% 0%, rgba(99, 102, 241, 0.15) 0px, transparent 50%),
+                        radial-gradient(at 100% 0%, rgba(168, 85, 247, 0.15) 0px, transparent 50%);
+                    color: white;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    height: 100vh;
+                    margin: 0;
+                    overflow: hidden;
+                }
+                .glass {
+                    background: rgba(255, 255, 255, 0.03);
+                    backdrop-filter: blur(20px);
+                    -webkit-backdrop-filter: blur(20px);
+                    border: 1px solid rgba(255, 255, 255, 0.1);
+                    padding: 3rem;
+                    border-radius: 2rem;
+                    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+                    max-width: 500px;
+                    width: 90%;
+                    text-align: center;
+                    animation: fadeIn 0.8s ease-out;
+                }
+                @keyframes fadeIn {
+                    from { opacity: 0; transform: translateY(20px); }
+                    to { opacity: 1; transform: translateY(0); }
+                }
+                .icon-box {
+                    width: 80px;
+                    height: 80px;
+                    background: linear-gradient(135deg, var(--primary), var(--secondary));
+                    border-radius: 1.5rem;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    margin: 0 auto 2rem;
+                    font-size: 2.5rem;
+                    box-shadow: 0 10px 20px rgba(99, 102, 241, 0.3);
+                }
+                h1 { 
+                    font-size: 2.5rem; 
+                    font-weight: 600;
+                    margin-bottom: 1rem;
+                    background: linear-gradient(to right, #fff, #cbd5e1);
+                    -webkit-background-clip: text;
+                    -webkit-text-fill-color: transparent;
+                }
+                p { 
+                    font-size: 1.1rem; 
+                    line-height: 1.6;
+                    color: #94a3b8;
+                    margin-bottom: 2rem;
+                }
+                .status-badge {
+                    display: inline-block;
+                    padding: 0.5rem 1rem;
+                    background: rgba(239, 68, 68, 0.1);
+                    border: 1px solid rgba(239, 68, 68, 0.2);
+                    color: #f87171;
+                    border-radius: 9999px;
+                    font-size: 0.875rem;
+                    font-weight: 600;
+                    margin-bottom: 1rem;
+                }
+                .footer {
+                    font-size: 0.875rem;
+                    color: #64748b;
+                    margin-top: 2rem;
+                    border-top: 1px solid rgba(255, 255, 255, 0.05);
+                    padding-top: 1.5rem;
+                }
+            </style>
+        </head>
+        <body>
+            <div class="glass">
+                <div class="status-badge">System Offline</div>
+                <div class="icon-box">🔒</div>
+                <h1>Akses Dibatasi</h1>
+                <p>Maaf, aplikasi ini sedang dinonaktifkan oleh administrator. Silakan hubungi tim teknis untuk informasi aktivasi kembali.</p>
+                <div class="footer">
+                    &copy; 2026 Duration Counter System
+                </div>
+            </div>
+        </body>
+        </html>
+        """, 403
+
 
 # Setup exclude drives from .env
 EXCLUDE_DRIVES_ENV = os.getenv("EXCLUDE_DRIVES", "")
@@ -326,11 +474,18 @@ def scan_all_drives():
         # Get all drives
         drives = set()
         for partition in psutil.disk_partitions():
-            drive_mount = partition.mountpoint
-            if drive_mount.upper() in EXCLUDE_DRIVES:
-                print(f"Skipping excluded drive: {drive_mount}")
-                continue
-            drives.add(drive_mount)
+            # Filter for Mac/Linux
+            if os.name != 'nt':
+                if any(p in partition.mountpoint for p in ['/dev', '/proc', '/sys', '/run', '/var/lib']):
+                    continue
+                if partition.mountpoint == '/' or partition.mountpoint.startswith('/Volumes'):
+                    drives.add(partition.mountpoint)
+            else:
+                drive_mount = partition.mountpoint
+                if drive_mount.upper() in EXCLUDE_DRIVES:
+                    print(f"Skipping excluded drive: {drive_mount}")
+                    continue
+                drives.add(drive_mount)
         
         files_found = 0
         files_processed = 0
