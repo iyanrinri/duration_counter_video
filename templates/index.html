@@ -41,6 +41,10 @@
         header h1 {
             font-size: 28px;
             margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
         }
 
         header p {
@@ -194,6 +198,9 @@
             border: none;
             padding: 0;
             margin: 0;
+            display: flex;
+            align-items: center;
+            gap: 8px;
         }
 
         /* Accordion Styles */
@@ -451,7 +458,10 @@
     <div id="app">
         <div class="container">
             <header>
-                <h1>🎬 Duration Counter</h1>
+                <h1>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.2 6 3 11l-.9-2.4c-.3-1.1.3-2.2 1.3-2.5l13.5-4c1.1-.3 2.2.3 2.5 1.3Z"/><path d="m6.2 5.3 3.1 3.9"/><path d="m12.4 3.4 3.1 4"/><path d="M3 11h18v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2Z"/></svg>
+                    Duration Counter
+                </h1>
                 <p>Recording Monitor & Metadata Logger</p>
             </header>
 
@@ -460,10 +470,12 @@
                 <div class="controls">
                     <button class="btn-scan" @click="scanDrives" :disabled="isLoading">
                         <span v-if="isLoading" class="spinner"></span>
-                        <span>{{ isLoading ? 'Scanning...' : '🔍 Scan Drives' }}</span>
+                        <svg v-else xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+                        <span>{{ isLoading ? 'Scanning...' : 'Scan Drives' }}</span>
                     </button>
                     <button class="btn-clear" @click="clearData" :disabled="isLoading" v-if="hasData">
-                        🗑️ Clear All Data
+                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/><line x1="10" x2="10" y1="11" y2="17"/><line x1="14" x2="14" y1="11" y2="17"/></svg>
+                        <span>Clear All Data</span>
                     </button>
                 </div>
 
@@ -471,7 +483,9 @@
                 <transition name="fade">
                     <div v-if="statusMessage" :class="['status', statusType]">
                         <span v-if="statusType === 'loading'" class="spinner"></span>
-                        {{ statusMessage }}
+                        <svg v-if="statusType === 'success'" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><path d="m9 11 3 3L22 4"/></svg>
+                        <svg v-if="statusType === 'error'" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="m15 9-6 6"/><path d="m9 9 6 6"/></svg>
+                        <span>{{ statusMessage }}</span>
                     </div>
                 </transition>
 
@@ -507,14 +521,18 @@
 
                 <!-- Empty State -->
                 <div v-if="!hasData && !isLoading" class="empty-state">
-                    <p>📭 No data yet</p>
-                    <p style="font-size: 12px; margin-top: 10px;">Click "Scan Drives" to start monitoring</p>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-bottom: 15px; color: #cbd5e1;"><polyline points="22 12 16 12 14 15 10 15 8 12 2 12"/><path d="M5.45 5.11 2 12v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6l-3.45-6.89A2 2 0 0 0 16.76 4H7.24a2 2 0 0 0-1.79 1.11z"/></svg>
+                    <p style="font-size: 16px; font-weight: 500;">No data yet</p>
+                    <p style="font-size: 12px; margin-top: 8px;">Click "Scan Drives" to start monitoring</p>
                 </div>
 
                 <!-- Recordings Section (Grouped by Date) -->
                 <div v-if="Object.keys(grouped).length > 0" class="section">
                     <div class="section-header">
-                        <h2>📹 Backlog ({{ Object.keys(grouped).length }} Days)</h2>
+                        <h2>
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m16 13 5.223 3.482a.5.5 0 0 0 .777-.416V7.87a.5.5 0 0 0-.752-.432L16 10.5"/><rect x="2" y="6" width="14" height="12" rx="2"/></svg>
+                            Backlog ({{ Object.keys(grouped).length }} Days)
+                        </h2>
                         <div class="section-controls">
                             <button class="btn-toggle-all" @click="toggleAll(true)" v-if="!allExpanded">Expand All</button>
                             <button class="btn-toggle-all" @click="toggleAll(false)" v-else>Collapse All</button>
@@ -655,9 +673,9 @@
                             const updatedData = await dataResponse.json();
                             this.grouped = updatedData.grouped || {};
                             
-                            this.showStatus('✅ Scan completed successfully', 'success');
+                            this.showStatus('Scan completed successfully', 'success');
                         } else {
-                            this.showStatus(`❌ Error: ${data.message}`, 'error');
+                            this.showStatus(`Error: ${data.message}`, 'error');
                         }
                     } catch (error) {
                         console.error('Error scanning:', error);
@@ -689,9 +707,9 @@
                             this.backlog = {};
                             this.grouped = {};
                             this.expandedDates = [];
-                            this.showStatus(`✅ Data cleared (${data.deleted_files.join(', ')})`, 'success');
+                            this.showStatus(`Data cleared (${data.deleted_files.join(', ')})`, 'success');
                         } else {
-                            this.showStatus(`❌ Error: ${data.message}`, 'error');
+                            this.showStatus(`Error: ${data.message}`, 'error');
                         }
                     } catch (error) {
                         console.error('Error clearing data:', error);
