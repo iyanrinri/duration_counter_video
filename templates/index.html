@@ -261,6 +261,9 @@
             padding: 2px 8px;
             border-radius: 12px;
             white-space: nowrap;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
         }
 
         .expand-icon {
@@ -595,8 +598,18 @@
                                 </div>
                                 <div class="date-info">
                                     <div class="date-stats">
-                                        <span class="stat-badge">{{ drive.file_count }} files</span>
-                                        <span class="stat-badge">{{ drive.total_duration_formatted }}</span>
+                                        <span class="stat-badge">
+                                            {{ drive.file_count }} files
+                                            <button class="copy-btn" title="Copy Count" @click.stop="copyToClipboard(drive.file_count)">
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+                                            </button>
+                                        </span>
+                                        <span class="stat-badge">
+                                            {{ drive.total_duration_formatted }}
+                                            <button class="copy-btn" title="Copy Duration" @click.stop="copyToClipboard(drive.total_duration_formatted)">
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+                                            </button>
+                                        </span>
                                     </div>
                                     <div class="expand-icon" :style="{ transform: isDriveExpanded(driveName) ? 'rotate(180deg)' : 'none' }">
                                         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -617,9 +630,15 @@
                                                 <div class="date-stats">
                                                     <span class="stat-badge">
                                                         {{ group.file_count }} files
+                                                        <button class="copy-btn" title="Copy Count" @click.stop="copyToClipboard(group.file_count)">
+                                                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+                                                        </button>
                                                     </span>
                                                     <span class="stat-badge">
                                                         {{ group.total_duration_formatted }}
+                                                        <button class="copy-btn" title="Copy Duration" @click.stop="copyToClipboard(group.total_duration_formatted)">
+                                                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+                                                        </button>
                                                     </span>
                                                 </div>
                                             </div>
