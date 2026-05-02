@@ -8,6 +8,7 @@ from pathlib import Path
 import psutil
 import threading
 import urllib.request
+import re
 from dotenv import load_dotenv
 
 
@@ -52,15 +53,48 @@ def is_app_enabled():
 EXCLUDE_DRIVES_ENV = os.getenv("EXCLUDE_DRIVES", "")
 EXCLUDE_DRIVES = set()
 for d in EXCLUDE_DRIVES_ENV.split(","):
-    d = d.strip().upper()
+    d = d.strip()
     if d:
-        # Normalize drive letters to have trailing slash
-        if not d.endswith("\\") and not d.endswith("/"):
-            d += "\\"
+        if os.name == 'nt':
+            d = d.upper()
+            if not d.endswith("\\") and not d.endswith("/"):
+                d += "\\"
         EXCLUDE_DRIVES.add(d)
 
 # Track drives yang sudah pernah dilihat
 previous_drives = set()
+
+
+def extract_date_from_path(file_path):
+    """Extract YYYY-MM-DD from file path"""
+    if not file_path:
+        return None
+    match = re.search(r'(\d{4}-\d{2}-\d{2})', str(file_path))
+    if match:
+        return match.group(1)
+    return None
+
+
+def get_drive_label(file_path):
+    """Extract drive label/letter from path"""
+    if not file_path:
+        return "Unknown Drive"
+    
+    path_str = str(file_path)
+    if os.name == 'nt':
+        # Return drive letter (e.g. D:)
+        match = re.match(r'^([a-zA-Z]:)', path_str)
+        return match.group(1).upper() if match else "Local"
+    
+    parts = path_str.split('/')
+    if len(parts) > 2 and parts[1] == 'Volumes':
+        return parts[2]
+    if len(parts) > 3 and parts[1] == 'media':
+        return parts[3]
+    if len(parts) > 2 and parts[1] == 'media':
+        return parts[2]
+        
+    return "System"
 
 
 def get_md5_first_mb(file_path):
@@ -253,17 +287,26 @@ def get_connected_drives():
     """Get list of connected drives/partitions, filtering for relevant ones on Mac/Linux"""
     drives = set()
     for partition in psutil.disk_partitions():
+        mountpoint = partition.mountpoint
+        
         # Filter for Mac/Linux
         if os.name != 'nt':
-            if any(p in partition.mountpoint for p in ['/dev', '/proc', '/sys', '/run', '/var/lib']):
+            # Skip system paths
+            if any(p in mountpoint for p in ['/dev', '/proc', '/sys', '/run', '/var/lib']):
                 continue
-            if partition.mountpoint == '/' or partition.mountpoint.startswith('/Volumes'):
-                drives.add(partition.mountpoint)
+                
+            # Check exclusion
+            if mountpoint in EXCLUDE_DRIVES or mountpoint.upper() in [e.upper() for e in EXCLUDE_DRIVES]:
+                continue
+                
+            # Focus on external volumes and root
+            if mountpoint == '/' or mountpoint.startswith('/Volumes') or mountpoint.startswith('/media'):
+                drives.add(mountpoint)
         else:
-            drive_mount = partition.mountpoint
-            if drive_mount.upper() in EXCLUDE_DRIVES:
+            # Windows logic
+            if mountpoint.upper() in EXCLUDE_DRIVES:
                 continue
-            drives.add(drive_mount)
+            drives.add(mountpoint)
     return drives
 
 
@@ -277,12 +320,11 @@ def check_new_drives():
     if new_drives:
         print(f"\n[{datetime.now()}] New drive(s) detected: {new_drives}")
         
-        # Sort drives to have consistent numbering during this detection cycle
-        sorted_new_drives = sorted(list(new_drives))
-        
-        for i, drive in enumerate(sorted_new_drives, 1):
-            # Create friendly name like New-001 (D:)
-            drive_label = f"New-{i:03d} ({drive.strip('\\/')})"
+        for drive in new_drives:
+            # Use actual volume label for display
+            drive_label = get_drive_label(drive)
+            if drive_label == "System" or drive_label == "Local":
+                drive_label = f"Disk ({drive.strip('\\/')})"
             
             print(f"Scanning {drive} as {drive_label}...")
             files = find_recording_files(drive)

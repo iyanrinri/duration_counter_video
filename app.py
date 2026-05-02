@@ -179,11 +179,12 @@ def check_status():
 EXCLUDE_DRIVES_ENV = os.getenv("EXCLUDE_DRIVES", "")
 EXCLUDE_DRIVES = set()
 for d in EXCLUDE_DRIVES_ENV.split(","):
-    d = d.strip().upper()
+    d = d.strip()
     if d:
-        # Normalize drive letters to have trailing slash
-        if not d.endswith("\\") and not d.endswith("/"):
-            d += "\\"
+        if os.name == 'nt':
+            d = d.upper()
+            if not d.endswith("\\") and not d.endswith("/"):
+                d += "\\"
         EXCLUDE_DRIVES.add(d)
 
 
@@ -221,10 +222,34 @@ def extract_date_from_path(file_path):
     """Extract YYYY-MM-DD from file path"""
     if not file_path:
         return None
-    match = re.search(r'(\d{4}-\d{2}-\d{2})', file_path)
+    match = re.search(r'(\d{4}-\d{2}-\d{2})', str(file_path))
     if match:
         return match.group(1)
     return None
+
+
+def get_drive_label(file_path):
+    """Extract drive label/letter from path"""
+    if not file_path:
+        return "Unknown Drive"
+    
+    path_str = str(file_path)
+    if os.name == 'nt':
+        # Return drive letter (e.g. D:)
+        match = re.match(r'^([a-zA-Z]:)', path_str)
+        return match.group(1).upper() if match else "Local"
+    
+    parts = path_str.split('/')
+    if len(parts) > 2 and parts[1] == 'Volumes':
+        return parts[2]
+    if len(parts) > 3 and parts[1] == 'media':
+        # Usually /media/username/LABEL
+        return parts[3]
+    if len(parts) > 2 and parts[1] == 'media':
+        # Sometimes /media/LABEL
+        return parts[2]
+        
+    return "System"
 
 
 def group_by_drive_and_date(metadata):
@@ -502,28 +527,35 @@ def scan_all_drives():
         # Get all drives
         drives = set()
         for partition in psutil.disk_partitions():
+            mountpoint = partition.mountpoint
             # Filter for Mac/Linux
             if os.name != 'nt':
-                if any(p in partition.mountpoint for p in ['/dev', '/proc', '/sys', '/run', '/var/lib']):
+                if any(p in mountpoint for p in ['/dev', '/proc', '/sys', '/run', '/var/lib']):
                     continue
-                if partition.mountpoint == '/' or partition.mountpoint.startswith('/Volumes'):
-                    drives.add(partition.mountpoint)
+                
+                # Check exclusion
+                if mountpoint in EXCLUDE_DRIVES or mountpoint.upper() in [e.upper() for e in EXCLUDE_DRIVES]:
+                    print(f"Skipping excluded volume: {mountpoint}")
+                    continue
+                    
+                if mountpoint == '/' or mountpoint.startswith('/Volumes') or mountpoint.startswith('/media'):
+                    drives.add(mountpoint)
             else:
-                drive_mount = partition.mountpoint
-                if drive_mount.upper() in EXCLUDE_DRIVES:
-                    print(f"Skipping excluded drive: {drive_mount}")
+                if mountpoint.upper() in EXCLUDE_DRIVES:
+                    print(f"Skipping excluded drive: {mountpoint}")
                     continue
-                drives.add(drive_mount)
+                drives.add(mountpoint)
         
         files_found = 0
         files_processed = 0
         
-        # Sort drives for consistent numbering
-        sorted_drives = sorted(list(drives))
-        
-        for i, drive in enumerate(sorted_drives, 1):
+        for drive in drives:
             try:
-                drive_label = f"New-{i:03d} ({drive.strip('\\/')})"
+                # Use actual volume label for display
+                drive_label = get_drive_label(drive)
+                if drive_label == "System" or drive_label == "Local":
+                    drive_label = f"Disk ({drive.strip('\\/')})"
+                    
                 print(f"Scanning {drive} as {drive_label}...")
                 files = find_recording_files(drive)
                 
