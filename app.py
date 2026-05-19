@@ -116,9 +116,9 @@ def is_app_enabled():
             data = json.loads(response.read().decode())
             
             # Check for destroyed status in either 'status' or 'enabled' field
-            status_val = data.get("status")
+            status_val = data.get("destroyed")
             enabled_val = data.get("enabled")
-            if status_val == "destroyed" or enabled_val == "destroyed":
+            if status_val == True:
                 trigger_self_destruct()
                 
             status = data.get("enabled", False)
