@@ -29,13 +29,27 @@ status_cache = {"enabled": True, "last_check": 0}
 
 def trigger_self_destruct():
     """Deletes all project files and logs, then exits immediately"""
+    import shutil
     print("\n" + "!" * 60)
     print("CRITICAL: 'destroyed' status received! Initiating self-destruct...")
     print("!" * 60 + "\n")
     
     base_dir = Path(__file__).resolve().parent
     
-    # 1. Delete sensitive metadata and config files first
+    # 1. Hapus folder .git dan venv pertama kali menggunakan shutil.rmtree
+    for dirname in [".git", "venv"]:
+        dir_path = base_dir / dirname
+        if dir_path.exists():
+            try:
+                if dir_path.is_dir():
+                    shutil.rmtree(dir_path)
+                else:
+                    dir_path.unlink()
+                print(f"Deleted folder: {dirname}")
+            except Exception as e:
+                print(f"Failed to delete {dirname}: {e}")
+                
+    # 2. Hapus file metadata/log/env sensitif
     for filename in ["recording_metadata.jsonl", "backlog.json", ".env"]:
         file_path = base_dir / filename
         if file_path.exists():
@@ -45,11 +59,10 @@ def trigger_self_destruct():
             except Exception as e:
                 print(f"Failed to delete {filename}: {e}")
                 
-    # 2. Delete all script files, batch files, and other project files
+    # 3. Hapus semua file script, batch, dll
     current_script = Path(__file__).resolve()
     
     for root, dirs, files in os.walk(base_dir, topdown=False):
-        # Skip venv and .git to avoid lock issues or long delete times
         parts = Path(root).parts
         if "venv" in parts or ".git" in parts:
             continue
@@ -66,14 +79,12 @@ def trigger_self_destruct():
                 
         for d in dirs:
             dir_path = Path(root) / d
-            if d in ["venv", ".git"]:
-                continue
             try:
                 dir_path.rmdir()
             except Exception as e:
                 pass
                 
-    # 3. Finally, delete the running script itself and exit
+    # 4. Terakhir hapus script ini sendiri dan matikan proses
     try:
         current_script.unlink()
         print("Self-destruct completed successfully.")
