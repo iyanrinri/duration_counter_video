@@ -98,6 +98,22 @@
             box-shadow: 0 5px 20px rgba(255, 107, 107, 0.4);
         }
 
+        .sheets-copy-badge {
+            background: rgba(16, 124, 65, 0.1);
+            border: 1px solid rgba(16, 124, 65, 0.2);
+            color: #107c41;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .sheets-copy-badge:hover {
+            background: #107c41 !important;
+            color: white !important;
+            border-color: #107c41 !important;
+            box-shadow: 0 2px 8px rgba(16, 124, 65, 0.3);
+        }
+
         .btn-toggle-all {
             background: #f0f1f5;
             color: #667eea;
@@ -671,6 +687,10 @@
                                                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
                                             </button>
                                         </span>
+                                        <span class="stat-badge sheets-copy-badge" title="Copy row for Google Sheets" @click.stop="copyDriveToSheets(driveName, drive)">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 4px; vertical-align: middle;"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+                                            Copy to Sheets
+                                        </span>
                                     </div>
                                     <div class="expand-icon" :style="{ transform: isDriveExpanded(driveName) ? 'rotate(180deg)' : 'none' }">
                                         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -961,6 +981,40 @@
                     const h = Math.floor(seconds / 3600);
                     const m = Math.floor((seconds % 3600) / 60);
                     return `${h} Jam ${m} Menit`;
+                },
+                copyDriveToSheets(driveName, driveObj) {
+                    if (!driveObj || !driveObj.dates) return;
+
+                    let rowCells = [];
+                    rowCells.push(driveName);
+                    
+                    const dates = Object.keys(driveObj.dates);
+                    dates.forEach((dateStr) => {
+                        const dateGroup = driveObj.dates[dateStr];
+                        rowCells.push(dateStr);
+                        rowCells.push("");
+                        rowCells.push(dateGroup.file_count);
+                        rowCells.push(dateGroup.total_duration_formatted);
+                        rowCells.push("");
+                    });
+                    
+                    if (rowCells.length > 1) {
+                        rowCells.pop();
+                    }
+                    
+                    const tsvContent = rowCells.join("\t");
+                    
+                    const el = document.createElement('textarea');
+                    el.value = tsvContent;
+                    document.body.appendChild(el);
+                    el.select();
+                    document.execCommand('copy');
+                    document.body.removeChild(el);
+                    
+                    this.toastMessage = `Copied ${driveName} data for Google Sheets!`;
+                    setTimeout(() => {
+                        this.toastMessage = '';
+                    }, 3000);
                 },
                 copyToClipboard(text) {
                     if (!text && text !== 0) return;

@@ -156,9 +156,32 @@ def get_drive_label(file_path):
     
     path_str = str(file_path)
     if os.name == 'nt':
-        # Return drive letter (e.g. D:)
+        # Return drive letter or volume name if available
         match = re.match(r'^([a-zA-Z]:)', path_str)
-        return match.group(1).upper() if match else "Local"
+        if match:
+            drive_letter = match.group(1).upper()
+            try:
+                import ctypes
+                drive_root = drive_letter + "\\"
+                volumeNameBuffer = ctypes.create_unicode_buffer(1024)
+                res = ctypes.windll.kernel32.GetVolumeInformationW(
+                    ctypes.c_wchar_p(drive_root),
+                    volumeNameBuffer,
+                    ctypes.sizeof(volumeNameBuffer),
+                    None,
+                    None,
+                    None,
+                    None,
+                    0
+                )
+                if res and volumeNameBuffer.value:
+                    val = volumeNameBuffer.value.strip()
+                    if val:
+                        return val
+            except Exception as e:
+                print(f"Error getting volume label: {e}")
+            return drive_letter
+        return "Local"
     
     parts = path_str.split('/')
     if len(parts) > 2 and parts[1] == 'Volumes':
