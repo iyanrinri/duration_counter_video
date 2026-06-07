@@ -573,6 +573,150 @@
         .btn-secondary:hover {
             background: #cbd5e0;
         }
+
+        .btn-clear-scan {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .btn-clear-scan:hover {
+            box-shadow: 0 5px 20px rgba(102, 126, 234, 0.4);
+            transform: translateY(-1px);
+        }
+
+        /* Tabs and Compare Styles */
+        .tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 25px;
+            border-bottom: 2px solid #e2e8f0;
+            padding-bottom: 10px;
+        }
+
+        .tab-btn {
+            background: transparent;
+            color: #718096;
+            padding: 10px 20px;
+            font-size: 16px;
+            border: none;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            border-bottom: 3px solid transparent;
+            border-radius: 0;
+            margin-bottom: -12px;
+        }
+
+        .tab-btn:hover {
+            color: #4a5568;
+            background: rgba(102, 126, 234, 0.05);
+            border-radius: 6px 6px 0 0;
+        }
+
+        .tab-btn.active {
+            color: #667eea;
+            border-bottom-color: #667eea;
+        }
+
+        .compare-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        .compare-col {
+            background: #f8fafc;
+            border-radius: 12px;
+            padding: 20px;
+            border: 1px solid #e2e8f0;
+        }
+
+        .compare-header {
+            font-size: 18px;
+            font-weight: 700;
+            margin-bottom: 15px;
+            color: #2d3748;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        
+        .compare-header select {
+            padding: 8px 12px;
+            border-radius: 6px;
+            border: 1px solid #cbd5e0;
+            background: white;
+            font-size: 14px;
+            color: #4a5568;
+            outline: none;
+            width: 60%;
+        }
+
+        .compare-summary {
+            background: white;
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+            border: 1px solid #edf2f7;
+        }
+        
+        .compare-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 8px;
+            font-size: 14px;
+        }
+        
+        .compare-row:last-child {
+            margin-bottom: 0;
+        }
+
+        .compare-label {
+            color: #718096;
+        }
+        
+        .compare-value {
+            font-weight: 600;
+            color: #2d3748;
+        }
+        
+        .compare-date-card {
+            background: white;
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 15px;
+            border: 1px solid #e2e8f0;
+            border-left: 4px solid #a0aec0;
+        }
+
+        .compare-date-card.has-data {
+            border-left-color: #48bb78;
+        }
+
+        .compare-date-card.no-data {
+            border-left-color: #f56565;
+            opacity: 0.7;
+        }
+        
+        .compare-date-title {
+            font-weight: 600;
+            margin-bottom: 10px;
+            padding-bottom: 5px;
+            border-bottom: 1px solid #edf2f7;
+            font-size: 15px;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        @media (max-width: 768px) {
+            .compare-grid {
+                grid-template-columns: 1fr;
+            }
+        }
     </style>
 </head>
 <body>
@@ -587,6 +731,20 @@
             </header>
 
             <div class="content">
+                <!-- Tabs -->
+                <div class="tabs">
+                    <button :class="['tab-btn', { active: currentTab === 'monitor' }]" @click="currentTab = 'monitor'">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
+                        Main Monitor
+                    </button>
+                    <button :class="['tab-btn', { active: currentTab === 'compare' }]" @click="currentTab = 'compare'">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 3v18"/><path d="M10 10V4a1 1 0 0 0-1-1H3a1 1 0 0 0-1 1v6a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1Z"/><path d="M10 20v-6a1 1 0 0 0-1-1H3a1 1 0 0 0-1 1v6a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1Z"/><path d="M22 14v-4a1 1 0 0 0-1-1h-2a1 1 0 0 0-1 1v4a1 1 0 0 0 1 1h2a1 1 0 0 0 1-1Z"/></svg>
+                        Wrist Cam Compare
+                    </button>
+                </div>
+
+                <!-- Main Monitor View -->
+                <div v-show="currentTab === 'monitor'">
                 <!-- Controls -->
                 <div class="controls">
                     <button class="btn-scan" @click="scanDrives" :disabled="isLoading">
@@ -632,7 +790,12 @@
                     </div>
                     <div class="summary-card">
                         <h3>Total Size</h3>
-                        <div class="value">{{ formatFileSize(backlog.total_file_size || 0) }}</div>
+                        <div class="value">
+                            <span>{{ formatFileSize(backlog.total_file_size || 0) }}</span>
+                            <button class="copy-btn" title="Copy Size" @click.stop="copyToClipboard(formatFileSize(backlog.total_file_size || 0))">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+                            </button>
+                        </div>
                     </div>
                     <div class="summary-card">
                         <h3>Last Updated</h3>
@@ -682,6 +845,12 @@
                                             </button>
                                         </span>
                                         <span class="stat-badge">
+                                            {{ formatFileSize(drive.total_file_size) }}
+                                            <button class="copy-btn" title="Copy Size" @click.stop="copyToClipboard(formatFileSize(drive.total_file_size))">
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+                                            </button>
+                                        </span>
+                                        <span class="stat-badge">
                                             {{ drive.total_duration_formatted }}
                                             <button class="copy-btn" title="Copy Duration" @click.stop="copyToClipboard(drive.total_duration_formatted)">
                                                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
@@ -712,6 +881,12 @@
                                                     <span class="stat-badge">
                                                         {{ group.file_count }} files
                                                         <button class="copy-btn" title="Copy Count" @click.stop="copyToClipboard(group.file_count)">
+                                                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+                                                        </button>
+                                                    </span>
+                                                    <span class="stat-badge">
+                                                        {{ formatFileSize(group.total_file_size) }}
+                                                        <button class="copy-btn" title="Copy Size" @click.stop="copyToClipboard(formatFileSize(group.total_file_size))">
                                                             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
                                                         </button>
                                                     </span>
@@ -760,6 +935,114 @@
                         </div>
                     </div>
                 </div>
+                </div> <!-- End of Main Monitor View -->
+                
+                <!-- Compare View -->
+                <div v-if="currentTab === 'compare'">
+                    <div class="compare-actions" style="margin-bottom: 20px; display: flex; justify-content: flex-end;">
+                        <button class="btn-scan" style="background: #107c41; color: white;" @click="copyCompareToSheets" :disabled="!leftDrive && !rightDrive">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 4px; vertical-align: middle;"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+                            Copy to Sheets
+                        </button>
+                    </div>
+                    <div class="compare-grid">
+                        <!-- Left Column -->
+                        <div class="compare-col">
+                            <div class="compare-header">
+                                LEFT
+                                <select v-model="leftDrive">
+                                    <option value="">-- Select Drive --</option>
+                                    <option v-for="drive in availableDrives" :key="drive" :value="drive">{{ drive }}</option>
+                                </select>
+                            </div>
+                            
+                            <div v-if="leftSummary" class="compare-summary">
+                                <div class="compare-row">
+                                    <span class="compare-label">Total Files:</span>
+                                    <span class="compare-value">{{ leftSummary.file_count }}</span>
+                                </div>
+                                <div class="compare-row">
+                                    <span class="compare-label">Total Duration:</span>
+                                    <span class="compare-value">{{ leftSummary.total_duration_formatted }}</span>
+                                </div>
+                                <div class="compare-row">
+                                    <span class="compare-label">Total Size:</span>
+                                    <span class="compare-value">{{ formatFileSize(leftSummary.total_file_size) }}</span>
+                                </div>
+                            </div>
+                            
+                            <div class="compare-dates">
+                                <div v-for="date in comparisonDates" :key="date" :class="['compare-date-card', (leftSummary && leftSummary.dates[date]) ? 'has-data' : 'no-data']">
+                                    <div class="compare-date-title">
+                                        <span>{{ formatDisplayDate(date) }}</span>
+                                        <span v-if="leftSummary && leftSummary.dates[date]" style="font-size: 12px; color: #718096; font-weight: normal;">{{ leftSummary.dates[date].file_count }} files</span>
+                                    </div>
+                                    <div v-if="leftSummary && leftSummary.dates[date]" style="font-size: 13px;">
+                                        <div style="display:flex; justify-content:space-between; margin-bottom: 4px;">
+                                            <span style="color:#718096">Size:</span> 
+                                            <strong>{{ formatFileSize(leftSummary.dates[date].total_file_size) }}</strong>
+                                        </div>
+                                        <div style="display:flex; justify-content:space-between;">
+                                            <span style="color:#718096">Duration:</span> 
+                                            <strong>{{ leftSummary.dates[date].total_duration_formatted }}</strong>
+                                        </div>
+                                    </div>
+                                    <div v-else style="font-size: 13px; color: #a0aec0; text-align: center; padding: 10px 0;">
+                                        No files on this date
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Right Column -->
+                        <div class="compare-col">
+                            <div class="compare-header">
+                                RIGHT
+                                <select v-model="rightDrive">
+                                    <option value="">-- Select Drive --</option>
+                                    <option v-for="drive in availableDrives" :key="drive" :value="drive">{{ drive }}</option>
+                                </select>
+                            </div>
+                            
+                            <div v-if="rightSummary" class="compare-summary">
+                                <div class="compare-row">
+                                    <span class="compare-label">Total Files:</span>
+                                    <span class="compare-value">{{ rightSummary.file_count }}</span>
+                                </div>
+                                <div class="compare-row">
+                                    <span class="compare-label">Total Duration:</span>
+                                    <span class="compare-value">{{ rightSummary.total_duration_formatted }}</span>
+                                </div>
+                                <div class="compare-row">
+                                    <span class="compare-label">Total Size:</span>
+                                    <span class="compare-value">{{ formatFileSize(rightSummary.total_file_size) }}</span>
+                                </div>
+                            </div>
+                            
+                            <div class="compare-dates">
+                                <div v-for="date in comparisonDates" :key="date" :class="['compare-date-card', (rightSummary && rightSummary.dates[date]) ? 'has-data' : 'no-data']">
+                                    <div class="compare-date-title">
+                                        <span>{{ formatDisplayDate(date) }}</span>
+                                        <span v-if="rightSummary && rightSummary.dates[date]" style="font-size: 12px; color: #718096; font-weight: normal;">{{ rightSummary.dates[date].file_count }} files</span>
+                                    </div>
+                                    <div v-if="rightSummary && rightSummary.dates[date]" style="font-size: 13px;">
+                                        <div style="display:flex; justify-content:space-between; margin-bottom: 4px;">
+                                            <span style="color:#718096">Size:</span> 
+                                            <strong>{{ formatFileSize(rightSummary.dates[date].total_file_size) }}</strong>
+                                        </div>
+                                        <div style="display:flex; justify-content:space-between;">
+                                            <span style="color:#718096">Duration:</span> 
+                                            <strong>{{ rightSummary.dates[date].total_duration_formatted }}</strong>
+                                        </div>
+                                    </div>
+                                    <div v-else style="font-size: 13px; color: #a0aec0; text-align: center; padding: 10px 0;">
+                                        No files on this date
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div> <!-- End Compare View -->
             </div>
         </div>
 
@@ -783,6 +1066,10 @@
                     <div class="modal-footer">
                         <button class="btn-secondary" @click="closeModal">Batal</button>
                         <button class="btn-clear" @click="executeModalAction">Ya, Hapus</button>
+                        <button v-if="modalSecondaryAction" class="btn-clear-scan" @click="executeModalSecondaryAction">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+                            Hapus &amp; Scan
+                        </button>
                     </div>
                 </div>
             </div>
@@ -795,6 +1082,9 @@
         createApp({
             data() {
                 return {
+                    currentTab: 'monitor',
+                    leftDrive: '',
+                    rightDrive: '',
                     metadata: [],
                     backlog: {},
                     grouped: {},
@@ -808,10 +1098,30 @@
                     modalTitle: '',
                     modalMessage: '',
                     modalAction: null,
+                    modalSecondaryAction: null,
                     currentTime: new Date(),
                 };
             },
             computed: {
+                availableDrives() {
+                    return Object.keys(this.grouped || {});
+                },
+                comparisonDates() {
+                    const dates = new Set();
+                    if (this.leftDrive && this.grouped[this.leftDrive] && this.grouped[this.leftDrive].dates) {
+                        Object.keys(this.grouped[this.leftDrive].dates).forEach(d => dates.add(d));
+                    }
+                    if (this.rightDrive && this.grouped[this.rightDrive] && this.grouped[this.rightDrive].dates) {
+                        Object.keys(this.grouped[this.rightDrive].dates).forEach(d => dates.add(d));
+                    }
+                    return Array.from(dates).sort((a, b) => b.localeCompare(a));
+                },
+                leftSummary() {
+                    return this.leftDrive ? this.grouped[this.leftDrive] : null;
+                },
+                rightSummary() {
+                    return this.rightDrive ? this.grouped[this.rightDrive] : null;
+                },
                 hasData() {
                     return (this.backlog && this.backlog.total_files > 0) || this.metadata.length > 0;
                 },
@@ -885,38 +1195,51 @@
                         this.isLoading = false;
                     }
                 },
+                async doClear() {
+                    this.isLoading = true;
+                    this.showStatus('Clearing data...', 'loading');
+
+                    try {
+                        const response = await fetch('/api/clear', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                            }
+                        });
+
+                        const data = await response.json();
+
+                        if (data.status === 'success') {
+                            this.metadata = [];
+                            this.backlog = {};
+                            this.grouped = {};
+                            this.expandedDates = [];
+                            this.expandedDrives = [];
+                            this.showStatus(`Data cleared (${data.deleted_files.join(', ')})`, 'success');
+                            return true;
+                        } else {
+                            this.showStatus(`Error: ${data.message}`, 'error');
+                            return false;
+                        }
+                    } catch (error) {
+                        console.error('Error clearing data:', error);
+                        this.showStatus('Error clearing data', 'error');
+                        return false;
+                    } finally {
+                        this.isLoading = false;
+                    }
+                },
                 async clearData() {
                     this.confirmAction(
                         'Hapus Semua Data?', 
                         'Apakah Anda yakin ingin menghapus semua data rekaman? Tindakan ini tidak dapat dibatalkan.',
                         async () => {
-                            this.isLoading = true;
-                            this.showStatus('Clearing data...', 'loading');
-
-                            try {
-                                const response = await fetch('/api/clear', {
-                                    method: 'POST',
-                                    headers: {
-                                        'Content-Type': 'application/json',
-                                    }
-                                });
-
-                                const data = await response.json();
-
-                                if (data.status === 'success') {
-                                    this.metadata = [];
-                                    this.backlog = {};
-                                    this.grouped = {};
-                                    this.expandedDates = [];
-                                    this.showStatus(`Data cleared (${data.deleted_files.join(', ')})`, 'success');
-                                } else {
-                                    this.showStatus(`Error: ${data.message}`, 'error');
-                                }
-                            } catch (error) {
-                                console.error('Error clearing data:', error);
-                                this.showStatus('Error clearing data', 'error');
-                            } finally {
-                                this.isLoading = false;
+                            await this.doClear();
+                        },
+                        async () => {
+                            const cleared = await this.doClear();
+                            if (cleared) {
+                                await this.scanDrives();
                             }
                         }
                     );
@@ -1016,6 +1339,41 @@
                         this.toastMessage = '';
                     }, 3000);
                 },
+                copyCompareToSheets() {
+                    if (!this.leftSummary && !this.rightSummary) return;
+
+                    const leftFiles = this.leftSummary ? this.leftSummary.file_count : 0;
+                    const rightFiles = this.rightSummary ? this.rightSummary.file_count : 0;
+                    
+                    const getGbStr = (bytes) => {
+                        if (!bytes) return "0";
+                        const gb = bytes / (1024 * 1024 * 1024);
+                        return gb.toFixed(1).replace('.', ',');
+                    };
+                    
+                    const leftGb = this.leftSummary ? getGbStr(this.leftSummary.total_file_size) : "0";
+                    const rightGb = this.rightSummary ? getGbStr(this.rightSummary.total_file_size) : "0";
+
+                    const lines = [
+                        "Total file/SD\t\tSize/GB",
+                        "LEFT\tRIGHT\tLEFT\tRIGHT",
+                        `${leftFiles}\t${rightFiles}\t${leftGb}\t${rightGb}`
+                    ];
+                    
+                    const tsvContent = lines.join("\n");
+                    
+                    const el = document.createElement('textarea');
+                    el.value = tsvContent;
+                    document.body.appendChild(el);
+                    el.select();
+                    document.execCommand('copy');
+                    document.body.removeChild(el);
+                    
+                    this.toastMessage = `Copied comparison to Google Sheets!`;
+                    setTimeout(() => {
+                        this.toastMessage = '';
+                    }, 3000);
+                },
                 copyToClipboard(text) {
                     if (!text && text !== 0) return;
                     
@@ -1088,19 +1446,27 @@
                     
                     return date.toLocaleString();
                 },
-                confirmAction(title, message, action) {
+                confirmAction(title, message, action, secondaryAction) {
                     this.modalTitle = title;
                     this.modalMessage = message;
                     this.modalAction = action;
+                    this.modalSecondaryAction = secondaryAction || null;
                     this.showConfirmModal = true;
                 },
                 closeModal() {
                     this.showConfirmModal = false;
                     this.modalAction = null;
+                    this.modalSecondaryAction = null;
                 },
                 executeModalAction() {
                     if (this.modalAction) {
                         this.modalAction();
+                    }
+                    this.closeModal();
+                },
+                executeModalSecondaryAction() {
+                    if (this.modalSecondaryAction) {
+                        this.modalSecondaryAction();
                     }
                     this.closeModal();
                 }
