@@ -1167,9 +1167,13 @@
                         this.showStatus('Error loading data', 'error');
                     }
                 },
-                async scanDrives() {
+                async scanDrives(clearFirst = false) {
                     this.isLoading = true;
-                    this.showStatus('Waiting 3 seconds for USB to be ready...', 'loading');
+                    if (clearFirst) {
+                        this.showStatus('Clearing data & waiting 3 seconds for USB to be ready...', 'loading');
+                    } else {
+                        this.showStatus('Waiting 3 seconds for USB to be ready...', 'loading');
+                    }
                     await new Promise(resolve => setTimeout(resolve, 3000));
                     this.showStatus('Scanning drives for recordings...', 'loading');
 
@@ -1178,7 +1182,8 @@
                             method: 'POST',
                             headers: {
                                 'Content-Type': 'application/json',
-                            }
+                            },
+                            body: JSON.stringify({ clear: clearFirst })
                         });
 
                         const data = await response.json();
@@ -1245,12 +1250,7 @@
                             await this.doClear();
                         },
                         async () => {
-                            const cleared = await this.doClear();
-                            if (cleared) {
-                                this.showStatus('Clear finished. Waiting 1 second...', 'loading');
-                                await new Promise(resolve => setTimeout(resolve, 1000));
-                                await this.scanDrives();
-                            }
+                            await this.scanDrives(true);
                         }
                     );
                 },
