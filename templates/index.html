@@ -131,12 +131,18 @@
         }
 
         .status {
-            padding: 15px;
-            border-radius: 6px;
-            margin-bottom: 20px;
+            padding: 15px 20px;
+            border-radius: 8px;
             display: flex;
             align-items: center;
-            gap: 10px;
+            gap: 12px;
+            position: fixed;
+            top: 30px;
+            right: 30px;
+            z-index: 2000;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+            font-weight: 500;
+            min-width: 300px;
         }
 
         .status.loading {
@@ -1163,6 +1169,8 @@
                 },
                 async scanDrives() {
                     this.isLoading = true;
+                    this.showStatus('Waiting 3 seconds for USB to be ready...', 'loading');
+                    await new Promise(resolve => setTimeout(resolve, 3000));
                     this.showStatus('Scanning drives for recordings...', 'loading');
 
                     try {
@@ -1239,6 +1247,8 @@
                         async () => {
                             const cleared = await this.doClear();
                             if (cleared) {
+                                this.showStatus('Clear finished. Waiting 1 second...', 'loading');
+                                await new Promise(resolve => setTimeout(resolve, 1000));
                                 await this.scanDrives();
                             }
                         }
