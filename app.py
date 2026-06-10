@@ -414,6 +414,10 @@ def group_by_drive_and_date(metadata):
             drive_obj["total_file_size"] += item.get("file_size", 0)
             drive_obj["file_count"] += 1
             
+            # Set camera_id on drive_obj if not already set and is available
+            if not drive_obj.get("camera_id") and item.get("camera_id"):
+                drive_obj["camera_id"] = item.get("camera_id")
+            
         except Exception as e:
             print(f"Error grouping item: {e}")
     
@@ -487,7 +491,7 @@ def get_video_duration(file_path):
 
 
 def find_recording_files(drive_path):
-    """Find recording.mp4 or any .mp4 files if in DCIM folder"""
+    """Find recording.mp4 or any .mp4 files if in DCIM or recording folder"""
     files_found = []
     search_name = SEARCH_FILENAME.lower()
     print(f"Searching in: {drive_path}")
@@ -495,14 +499,16 @@ def find_recording_files(drive_path):
     # Menggunakan os.walk karena lebih tahan terhadap PermissionError (folder tidak bisa diakses)
     # dibandingkan path.rglob("*") yang bisa crash di tengah jalan
     for root, dirs, files in os.walk(drive_path):
-        # Check if "DCIM" is in any part of the current path
-        path_parts = root.upper().replace('\\', '/').split('/')
-        is_dcim = "DCIM" in path_parts
+        # Check if "DCIM" or "recording" is in any part of the current path
+        path_str = root.replace('\\', '/').lower()
+        path_parts = path_str.split('/')
+        is_dcim = "dcim" in path_parts
+        is_recording = "recording" in path_parts
         
         for file in files:
             file_lower = file.lower()
-            if is_dcim:
-                # If inside a DCIM folder, take all .mp4 files
+            if is_dcim or is_recording:
+                # If inside a DCIM or recording folder, take all .mp4 files
                 if file_lower.endswith(".mp4"):
                     full_path = os.path.join(root, file)
                     files_found.append(full_path)
@@ -538,6 +544,16 @@ def process_file(file_path, drive_name="Unknown Drive"):
         mtime = os.path.getmtime(file_path)
         modified_at = datetime.fromtimestamp(mtime).isoformat()
 
+        # Extract camera_id if inside 'recording' folder
+        camera_id = None
+        path_parts = file_path.replace('\\', '/').lower().split('/')
+        if "recording" in path_parts:
+            idx = path_parts.index("recording")
+            if idx + 1 < len(path_parts):
+                # The subfolder immediately after 'recording' is the camera ID
+                original_parts = file_path.replace('\\', '/').split('/')
+                camera_id = original_parts[idx + 1]
+
         metadata = {
             "timestamp": current_time,
             "recorded_date": extract_date_from_path(file_path),
@@ -547,6 +563,7 @@ def process_file(file_path, drive_name="Unknown Drive"):
             "file_size": file_size,
             "md5_first_1mb": md5_hash,
             "duration_seconds": duration,
+            "camera_id": camera_id,
         }
 
         return metadata
@@ -598,7 +615,8 @@ def update_backlog(metadata):
             "drive_name": metadata.get("drive_name", "Unknown Drive"),
             "md5_first_1mb": metadata["md5_first_1mb"],
             "duration_seconds": metadata["duration_seconds"],
-            "file_size": metadata["file_size"]
+            "file_size": metadata["file_size"],
+            "camera_id": metadata.get("camera_id")
         })
         
         # Calculate formatted totals

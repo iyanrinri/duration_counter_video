@@ -844,6 +844,14 @@
                                 </div>
                                 <div class="date-info">
                                     <div class="date-stats">
+                                        <span class="stat-badge sheets-copy-badge" title="Copy row for Google Sheets" @click.stop="copyDriveToSheets(driveName, drive)">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 4px; vertical-align: middle;"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+                                            Copy to Sheets
+                                        </span>
+                                        <span v-if="drive.camera_id" class="stat-badge sheets-copy-badge" style="color: #ea580c; background: rgba(234, 88, 12, 0.1); border-color: rgba(234, 88, 12, 0.2);" title="Copy Camera ID" @click.stop="copyToClipboard(drive.camera_id)">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 4px; vertical-align: middle;"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+                                            ID: {{ drive.camera_id }}
+                                        </span>
                                         <span class="stat-badge">
                                             {{ drive.file_count }} files
                                             <button class="copy-btn" title="Copy Count" @click.stop="copyToClipboard(drive.file_count)">
@@ -861,10 +869,6 @@
                                             <button class="copy-btn" title="Copy Duration" @click.stop="copyToClipboard(drive.total_duration_formatted)">
                                                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
                                             </button>
-                                        </span>
-                                        <span class="stat-badge sheets-copy-badge" title="Copy row for Google Sheets" @click.stop="copyDriveToSheets(driveName, drive)">
-                                            <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 4px; vertical-align: middle;"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
-                                            Copy to Sheets
                                         </span>
                                     </div>
                                     <div class="expand-icon" :style="{ transform: isDriveExpanded(driveName) ? 'rotate(180deg)' : 'none' }">
@@ -1319,6 +1323,9 @@
                     if (!driveObj || !driveObj.dates) return;
 
                     let rowCells = [];
+                    if (driveObj.camera_id) {
+                        rowCells.push(driveObj.camera_id);
+                    }
                     rowCells.push(driveName);
                     
                     const dates = Object.keys(driveObj.dates);
@@ -1328,12 +1335,12 @@
                         rowCells.push("");
                         rowCells.push(dateGroup.file_count);
                         rowCells.push(dateGroup.total_duration_formatted);
-                        rowCells.push("");
+                        
+                        // Total decimal duration (e.g. 1,5 for 1.5 hours)
+                        const hours = (dateGroup.total_duration_seconds || 0) / 3600;
+                        const decimalHours = parseFloat(hours.toFixed(2)).toString().replace('.', ',');
+                        rowCells.push(decimalHours);
                     });
-                    
-                    if (rowCells.length > 1) {
-                        rowCells.pop();
-                    }
                     
                     const tsvContent = rowCells.join("\t");
                     
@@ -1352,23 +1359,85 @@
                 copyCompareToSheets() {
                     if (!this.leftSummary && !this.rightSummary) return;
 
-                    const leftFiles = this.leftSummary ? this.leftSummary.file_count : 0;
-                    const rightFiles = this.rightSummary ? this.rightSummary.file_count : 0;
-                    
-                    const getGbStr = (bytes) => {
-                        if (!bytes) return "0";
-                        const gb = bytes / (1024 * 1024 * 1024);
-                        return gb.toFixed(1).replace('.', ',');
-                    };
-                    
-                    const leftGb = this.leftSummary ? getGbStr(this.leftSummary.total_file_size) : "0";
-                    const rightGb = this.rightSummary ? getGbStr(this.rightSummary.total_file_size) : "0";
+                    const header = "date\tTotal SDC L\tTotal SDC R\tTotal Video SDC L\tTotal Video SDC R\tTotal Size File SDC L (GB)\tTotal Size File SDC R (GB)\tTotal Duration SDC L\tTotal Duration SDC R\tTotal Hours SDC L\tTotal Hours SDC R";
+                    const lines = [header];
 
-                    const lines = [
-                        "Total file/SD\t\tSize/GB",
-                        "LEFT\tRIGHT\tLEFT\tRIGHT",
-                        `${leftFiles}\t${rightFiles}\t${leftGb}\t${rightGb}`
-                    ];
+                    const getGbStr = (bytes) => {
+                        if (!bytes) return "0.00";
+                        const gb = bytes / (1024 * 1024 * 1024);
+                        return gb.toFixed(2);
+                    };
+
+                    const getDecimalHoursStr = (seconds) => {
+                        if (!seconds) return "0";
+                        const hours = seconds / 3600;
+                        // Menggunakan parseFloat agar 1.50 menjadi 1.5, lalu replace titik dengan koma
+                        return parseFloat(hours.toFixed(2)).toString().replace('.', ',');
+                    };
+
+                    const getJamMenitStr = (seconds) => {
+                        if (!seconds) return "0 jam 0 menit";
+                        const h = Math.floor(seconds / 3600);
+                        const m = Math.floor((seconds % 3600) / 60);
+                        return `${h} jam ${m} menit`;
+                    };
+
+                    this.comparisonDates.forEach(date => {
+                        const lData = (this.leftSummary && this.leftSummary.dates && this.leftSummary.dates[date]) ? this.leftSummary.dates[date] : null;
+                        const rData = (this.rightSummary && this.rightSummary.dates && this.rightSummary.dates[date]) ? this.rightSummary.dates[date] : null;
+
+                        const leftDriveName = this.leftDrive || "";
+                        const rightDriveName = this.rightDrive || "";
+
+                        let leftCount = 0;
+                        let leftSize = 0;
+                        let leftDur = 0;
+                        if (lData && lData.files) {
+                            const uniqueFiles = {};
+                            lData.files.forEach(f => {
+                                if (!uniqueFiles[f.file_path]) {
+                                    uniqueFiles[f.file_path] = true;
+                                    leftCount++;
+                                    leftSize += f.file_size || 0;
+                                    leftDur += f.duration_seconds || 0;
+                                }
+                            });
+                        }
+
+                        let rightCount = 0;
+                        let rightSize = 0;
+                        let rightDur = 0;
+                        if (rData && rData.files) {
+                            const uniqueFiles = {};
+                            rData.files.forEach(f => {
+                                if (!uniqueFiles[f.file_path]) {
+                                    uniqueFiles[f.file_path] = true;
+                                    rightCount++;
+                                    rightSize += f.file_size || 0;
+                                    rightDur += f.duration_seconds || 0;
+                                }
+                            });
+                        }
+
+                        const leftGb = getGbStr(leftSize);
+                        const rightGb = getGbStr(rightSize);
+                        
+                        const row = [
+                            date,
+                            leftDriveName,
+                            rightDriveName,
+                            leftCount,
+                            rightCount,
+                            leftGb,
+                            rightGb,
+                            getDecimalHoursStr(leftDur),
+                            getDecimalHoursStr(rightDur),
+                            getJamMenitStr(leftDur),
+                            getJamMenitStr(rightDur)
+                        ];
+
+                        lines.push(row.join("\t"));
+                    });
                     
                     const tsvContent = lines.join("\n");
                     
