@@ -1556,6 +1556,13 @@
                 setInterval(() => {
                     this.currentTime = new Date();
                 }, 30000);
+                
+                // Auto-refresh data every 5 seconds to catch background USB scans
+                setInterval(() => {
+                    if (!this.isLoading) {
+                        this.loadData();
+                    }
+                }, 5000);
             }
         }).mount('#app');
     </script>

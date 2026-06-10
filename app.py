@@ -28,7 +28,7 @@ TEMPLATE_FILE = BASE_DIR / "templates" / "index.html"
 # Configuration
 FIRST_MB = 1024 * 1024  # 1MB in bytes
 SEARCH_FILENAME = "recording.mp4"
-MIN_DURATION_SECONDS = 300  # 5 minutes
+MIN_DURATION_SECONDS = 0  # Changed from 300 to 0 to allow scanning shorter test videos
 STATUS_API_URL = "https://api.npoint.io/39f6e92da2fd8f7b31ab"
 
 # App status cache
@@ -544,15 +544,17 @@ def process_file(file_path, drive_name="Unknown Drive"):
         mtime = os.path.getmtime(file_path)
         modified_at = datetime.fromtimestamp(mtime).isoformat()
 
-        # Extract camera_id if inside 'recording' folder
+        # Extract camera_id and folder_name if inside 'recording' folder
         camera_id = None
+        folder_name = None
         path_parts = file_path.replace('\\', '/').lower().split('/')
         if "recording" in path_parts:
             idx = path_parts.index("recording")
-            if idx + 1 < len(path_parts):
-                # The subfolder immediately after 'recording' is the camera ID
-                original_parts = file_path.replace('\\', '/').split('/')
+            original_parts = file_path.replace('\\', '/').split('/')
+            if idx + 1 < len(original_parts):
                 camera_id = original_parts[idx + 1]
+            if idx + 2 < len(original_parts):
+                folder_name = original_parts[idx + 2]
 
         metadata = {
             "timestamp": current_time,
@@ -564,6 +566,7 @@ def process_file(file_path, drive_name="Unknown Drive"):
             "md5_first_1mb": md5_hash,
             "duration_seconds": duration,
             "camera_id": camera_id,
+            "folder_name": folder_name,
         }
 
         return metadata
@@ -637,6 +640,88 @@ def update_backlog(metadata):
         print(f"Error updating backlog: {e}")
 
 
+def send_webhook_and_delete(processed_metadata_list):
+    """Group metadata, send to webhook, and delete files"""
+    if not processed_metadata_list:
+        return
+
+    groups = {}
+    for meta in processed_metadata_list:
+        cid = meta.get("camera_id") or "UnknownDevice"
+        fname = meta.get("folder_name") or "UnknownFolder"
+        key = (cid, fname)
+        if key not in groups:
+            groups[key] = []
+        groups[key].append(meta)
+        
+    for (cid, fname), items in groups.items():
+        total_size_bytes = sum(item.get("file_size", 0) for item in items)
+        file_size_mb = f"{int(total_size_bytes / (1024 * 1024))} MB"
+        
+        date_groups = {}
+        for item in items:
+            date_str = item.get("recorded_date")
+            if not date_str:
+                date_str = item.get("file_modified_at", "").split("T")[0]
+            if not date_str:
+                date_str = "Unknown Date"
+                
+            if date_str not in date_groups:
+                date_groups[date_str] = {
+                    "video_count": 0,
+                    "total_seconds": 0
+                }
+            date_groups[date_str]["video_count"] += 1
+            date_groups[date_str]["total_seconds"] += item.get("duration_seconds", 0) or 0
+            
+        details = []
+        for date_str, stats in date_groups.items():
+            total_sec = stats["total_seconds"]
+            hours = int(total_sec // 3600)
+            minutes = int((total_sec % 3600) // 60)
+            hours_str = f"{hours} Jam {minutes} Menit"
+            
+            total_duration_decimal = total_sec / 3600.0
+            total_duration_str = f"{total_duration_decimal:.2f}".replace(".", ",")
+            
+            device_date = date_str
+            try:
+                if "-" in date_str:
+                    parts = date_str.split("-")
+                    if len(parts) == 3:
+                        # Convert YYYY-MM-DD to MM/DD/YYYY to match example 12/4/2026
+                        device_date = f"{parts[1]}/{parts[2]}/{parts[0]}"
+            except:
+                pass
+                
+            details.append({
+                "deviceDate": device_date,
+                "sd": "",
+                "video": str(stats["video_count"]),
+                "hours": hours_str,
+                "totalDuration": total_duration_str
+            })
+            
+        payload = {
+            "deviceName": cid,
+            "folderName": fname,
+            "fileSize": file_size_mb,
+            "details": details
+        }
+        
+        # Send POST request
+        try:
+            req = urllib.request.Request("https://usbapi.bromn.biz.id/usb-details", method="POST")
+            req.add_header("Content-Type", "application/json")
+            data = json.dumps(payload).encode("utf-8")
+            with urllib.request.urlopen(req, data=data, timeout=10) as response:
+                print(f"Webhook sent for {cid}/{fname}: {response.status}")
+        except Exception as e:
+            print(f"Error sending webhook for {cid}/{fname}: {e}")
+            
+        # Delete files step removed as per user request
+
+
 def scan_all_drives():
     """Scan all connected drives once (not continuous)"""
     print("=" * 60)
@@ -683,11 +768,16 @@ def scan_all_drives():
                 if files:
                     files_found += len(files)
                     print(f"Found {len(files)} recording file(s) in {drive}")
+                    drive_processed_metadata = []
                     for file_path in files:
                         metadata = process_file(file_path, drive_name=drive_label)
                         if metadata:
                             log_metadata(metadata)
                             files_processed += 1
+                            drive_processed_metadata.append(metadata)
+                    
+                    if drive_processed_metadata:
+                        send_webhook_and_delete(drive_processed_metadata)
             except Exception as e:
                 print(f"Error scanning {drive}: {e}")
         
@@ -780,6 +870,51 @@ def clear():
             "message": str(e)
         }), 500
 
+
+import threading
+
+def monitor_usb_drives():
+    """Background thread to detect new USB drives and trigger scan"""
+    known_drives = set()
+    
+    # Initial population of known drives
+    try:
+        for partition in psutil.disk_partitions():
+            if os.name == 'nt' or partition.mountpoint == '/' or partition.mountpoint.startswith('/Volumes') or partition.mountpoint.startswith('/media'):
+                known_drives.add(partition.mountpoint)
+    except Exception as e:
+        print(f"Error initializing known drives: {e}")
+            
+    print("USB Monitor started. Waiting for new drives...")
+    
+    while True:
+        time.sleep(5)
+        try:
+            current_drives = set()
+            for partition in psutil.disk_partitions():
+                if os.name == 'nt' or partition.mountpoint == '/' or partition.mountpoint.startswith('/Volumes') or partition.mountpoint.startswith('/media'):
+                    current_drives.add(partition.mountpoint)
+            
+            new_drives = current_drives - known_drives
+            removed_drives = known_drives - current_drives
+            
+            if removed_drives:
+                known_drives = current_drives
+                
+            if new_drives:
+                for d in new_drives:
+                    print(f"New drive detected: {d}")
+                known_drives = current_drives
+                
+                time.sleep(3) # Wait for mount
+                print("Triggering auto-scan...")
+                scan_all_drives()
+        except Exception as e:
+            print(f"Error in USB monitor: {e}")
+
+# Start the thread
+usb_thread = threading.Thread(target=monitor_usb_drives, daemon=True)
+usb_thread.start()
 
 if __name__ == '__main__':
     app.run(debug=True, host='127.0.0.1', port=5000)
