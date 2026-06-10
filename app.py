@@ -648,7 +648,7 @@ def send_webhook_and_delete(processed_metadata_list):
     groups = {}
     for meta in processed_metadata_list:
         cid = meta.get("camera_id") or "UnknownDevice"
-        fname = meta.get("folder_name") or "UnknownFolder"
+        fname = meta.get("drive_name") or "UnknownDrive"
         key = (cid, fname)
         if key not in groups:
             groups[key] = []
