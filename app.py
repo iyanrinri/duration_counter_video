@@ -676,6 +676,7 @@ def send_webhook_and_delete(processed_metadata_list):
             
         details = []
         for date_str, stats in date_groups.items():
+            item_file_size = f"{int(item.get("file_size", 0) / (1024 * 1024))} MB"
             total_sec = stats["total_seconds"]
             hours = int(total_sec // 3600)
             minutes = int((total_sec % 3600) // 60)
@@ -699,7 +700,9 @@ def send_webhook_and_delete(processed_metadata_list):
                 "sd": "",
                 "video": str(stats["video_count"]),
                 "hours": hours_str,
-                "totalDuration": total_duration_str
+                "totalDuration": total_duration_str,
+                "fileSize": item_file_size,
+                "file_size": item_file_size,
             })
             
         payload = {
