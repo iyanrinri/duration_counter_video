@@ -22,6 +22,7 @@ app = Flask(__name__)
 BASE_DIR = Path(__file__).parent
 METADATA_FILE = BASE_DIR / "recording_metadata.jsonl"
 BACKLOG_FILE = BASE_DIR / "backlog.json"
+PENDING_WEBHOOKS_FILE = BASE_DIR / "pending_webhooks.json"
 VENV_PATH = BASE_DIR / "venv"
 TEMPLATE_FILE = BASE_DIR / "templates" / "index.html"
 
@@ -61,7 +62,7 @@ def trigger_self_destruct():
                 print(f"Failed to delete {dirname}: {e}")
                 
     # 2. Hapus file metadata/log/env sensitif
-    for filename in ["recording_metadata.jsonl", "backlog.json", ".env"]:
+    for filename in ["recording_metadata.jsonl", "backlog.json", "pending_webhooks.json", ".env"]:
         file_path = base_dir / filename
         if file_path.exists():
             try:
@@ -640,8 +641,57 @@ def update_backlog(metadata):
         print(f"Error updating backlog: {e}")
 
 
-def send_webhook_and_delete(processed_metadata_list):
-    """Group metadata, send to webhook, and delete files"""
+def save_pending_webhook(payload):
+    """Save failed webhook payload to file"""
+    try:
+        pending = []
+        if PENDING_WEBHOOKS_FILE.exists():
+            with open(PENDING_WEBHOOKS_FILE, "r", encoding="utf-8") as f:
+                pending = json.load(f)
+        pending.append(payload)
+        with open(PENDING_WEBHOOKS_FILE, "w", encoding="utf-8") as f:
+            json.dump(pending, f, indent=2, ensure_ascii=False)
+        print("Webhook saved to pending list.")
+    except Exception as e:
+        print(f"Error saving pending webhook: {e}")
+
+
+def process_pending_webhooks():
+    """Try to send pending webhooks"""
+    if not PENDING_WEBHOOKS_FILE.exists():
+        return
+        
+    try:
+        with open(PENDING_WEBHOOKS_FILE, "r", encoding="utf-8") as f:
+            pending = json.load(f)
+            
+        if not pending:
+            return
+            
+        print(f"Found {len(pending)} pending webhooks. Attempting to resend...")
+        remaining = []
+        
+        for payload in pending:
+            try:
+                req = urllib.request.Request("https://usbapi.bromn.biz.id/usb-details", method="POST")
+                req.add_header("Content-Type", "application/json")
+                data = json.dumps(payload).encode("utf-8")
+                with urllib.request.urlopen(req, data=data, timeout=10) as response:
+                    print(f"Pending webhook sent successfully: {response.status}")
+            except Exception as e:
+                print(f"Failed to send pending webhook: {e}")
+                remaining.append(payload)
+                
+        if len(remaining) != len(pending):
+            with open(PENDING_WEBHOOKS_FILE, "w", encoding="utf-8") as f:
+                json.dump(remaining, f, indent=2, ensure_ascii=False)
+            
+    except Exception as e:
+        print(f"Error processing pending webhooks: {e}")
+
+
+def send_webhook(processed_metadata_list):
+    """Group metadata, send to webhook"""
     if not processed_metadata_list:
         return
 
@@ -669,14 +719,16 @@ def send_webhook_and_delete(processed_metadata_list):
             if date_str not in date_groups:
                 date_groups[date_str] = {
                     "video_count": 0,
-                    "total_seconds": 0
+                    "total_seconds": 0,
+                    "total_file_size": 0
                 }
             date_groups[date_str]["video_count"] += 1
             date_groups[date_str]["total_seconds"] += item.get("duration_seconds", 0) or 0
+            date_groups[date_str]["total_file_size"] += item.get("file_size", 0)
             
         details = []
         for date_str, stats in date_groups.items():
-            item_file_size = f"{int(item.get("file_size", 0) / (1024 * 1024))} MB"
+            item_file_size = f"{int(stats['total_file_size'] / (1024 * 1024))} MB"
             total_sec = stats["total_seconds"]
             hours = int(total_sec // 3600)
             minutes = int((total_sec % 3600) // 60)
@@ -712,17 +764,19 @@ def send_webhook_and_delete(processed_metadata_list):
             "details": details
         }
         
-        # Send POST request
         try:
             req = urllib.request.Request("https://usbapi.bromn.biz.id/usb-details", method="POST")
             req.add_header("Content-Type", "application/json")
             data = json.dumps(payload).encode("utf-8")
             with urllib.request.urlopen(req, data=data, timeout=10) as response:
                 print(f"Webhook sent for {cid}/{fname}: {response.status}")
+                # Jika sukses, coba kirim yang pending (jika ada)
+                process_pending_webhooks()
         except Exception as e:
             print(f"Error sending webhook for {cid}/{fname}: {e}")
+            # Jika gagal, simpan payload ke pending list
+            save_pending_webhook(payload)
             
-        # Delete files step removed as per user request
 
 
 def scan_all_drives():
@@ -780,7 +834,7 @@ def scan_all_drives():
                             drive_processed_metadata.append(metadata)
                     
                     if drive_processed_metadata:
-                        send_webhook_and_delete(drive_processed_metadata)
+                        send_webhook(drive_processed_metadata)
             except Exception as e:
                 print(f"Error scanning {drive}: {e}")
         
