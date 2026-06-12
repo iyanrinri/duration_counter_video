@@ -719,16 +719,14 @@ def send_webhook(processed_metadata_list):
             if date_str not in date_groups:
                 date_groups[date_str] = {
                     "video_count": 0,
-                    "total_seconds": 0,
-                    "total_file_size": 0
+                    "total_seconds": 0
                 }
             date_groups[date_str]["video_count"] += 1
             date_groups[date_str]["total_seconds"] += item.get("duration_seconds", 0) or 0
-            date_groups[date_str]["total_file_size"] += item.get("file_size", 0)
             
         details = []
         for date_str, stats in date_groups.items():
-            item_file_size = f"{int(stats['total_file_size'] / (1024 * 1024))} MB"
+            item_file_size = f"{int(item.get("file_size", 0) / (1024 * 1024))} MB"
             total_sec = stats["total_seconds"]
             hours = int(total_sec // 3600)
             minutes = int((total_sec % 3600) // 60)
