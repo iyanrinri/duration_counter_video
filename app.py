@@ -515,6 +515,9 @@ def find_recording_files(drive_path):
         
         for file in files:
             file_lower = file.lower()
+            if "secondary" in file_lower:
+                continue
+                
             if is_dcim or is_recording:
                 # If inside a DCIM or recording folder, take all .mp4 files
                 if file_lower.endswith(".mp4"):
