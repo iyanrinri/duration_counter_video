@@ -368,7 +368,11 @@ def group_by_drive_and_date(metadata):
             
             # 1. Determine Date
             date_str = None
-            if file_name == search_name:
+            is_recording = "recording" in file_path.replace('\\', '/').lower().split('/')
+            
+            if is_recording and item.get("folder_name"):
+                date_str = item.get("folder_name")
+            elif file_name == search_name:
                 date_str = extract_date_from_path(file_path)
                 if not date_str:
                     date_str = item.get('file_modified_at', '').split('T')[0]
@@ -557,9 +561,13 @@ def process_file(file_path, drive_name="Unknown Drive"):
             if idx + 2 < len(original_parts):
                 folder_name = original_parts[idx + 2]
 
+        recorded_date = extract_date_from_path(file_path)
+        if "recording" in path_parts and folder_name:
+            recorded_date = folder_name
+
         metadata = {
             "timestamp": current_time,
-            "recorded_date": extract_date_from_path(file_path),
+            "recorded_date": recorded_date,
             "file_modified_at": modified_at,
             "file_path": file_path,
             "drive_name": drive_name,
@@ -710,11 +718,15 @@ def send_webhook(processed_metadata_list):
         
         date_groups = {}
         for item in items:
-            date_str = item.get("recorded_date")
-            if not date_str:
-                date_str = item.get("file_modified_at", "").split("T")[0]
-            if not date_str:
-                date_str = "Unknown Date"
+            is_recording = "recording" in item.get("file_path", "").replace('\\', '/').lower().split('/')
+            if is_recording and item.get("folder_name"):
+                date_str = item.get("folder_name")
+            else:
+                date_str = item.get("recorded_date")
+                if not date_str:
+                    date_str = item.get("file_modified_at", "").split("T")[0]
+                if not date_str:
+                    date_str = "Unknown Date"
                 
             if date_str not in date_groups:
                 date_groups[date_str] = {
