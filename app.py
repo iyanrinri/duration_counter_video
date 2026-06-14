@@ -386,17 +386,20 @@ def group_by_drive_and_date(metadata):
             if not date_str:
                 date_str = 'Unknown'
             
-            # 2. Structure: drive_groups[drive_name][dates][date_str]
-            if drive_name not in drive_groups:
-                drive_groups[drive_name] = {
-                    "drive_name": drive_name,
+            camera_id = item.get("camera_id")
+            group_key = f"{drive_name} ({camera_id})" if camera_id else drive_name
+
+            # 2. Structure: drive_groups[group_key][dates][date_str]
+            if group_key not in drive_groups:
+                drive_groups[group_key] = {
+                    "drive_name": group_key,
                     "total_duration_seconds": 0,
                     "total_file_size": 0,
                     "file_count": 0,
                     "dates": {}
                 }
             
-            drive_obj = drive_groups[drive_name]
+            drive_obj = drive_groups[group_key]
             if date_str not in drive_obj["dates"]:
                 drive_obj["dates"][date_str] = {
                     "date": date_str,
