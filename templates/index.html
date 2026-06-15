@@ -1323,10 +1323,17 @@
                     if (!driveObj || !driveObj.dates) return;
 
                     let rowCells = [];
+                    
+                    // Add total file size as the first column
+                    rowCells.push(this.formatFileSize(driveObj.total_file_size || 0));
+
                     if (driveObj.camera_id) {
                         rowCells.push(driveObj.camera_id);
                     }
-                    rowCells.push(driveName);
+                    
+                    // Clean the camera ID from the drive name
+                    let cleanDriveName = driveName.replace(/\s*\([^)]*\)$/, '');
+                    rowCells.push(cleanDriveName);
                     
                     const dates = Object.keys(driveObj.dates);
                     dates.forEach((dateStr) => {
@@ -1386,8 +1393,8 @@
                         const lData = (this.leftSummary && this.leftSummary.dates && this.leftSummary.dates[date]) ? this.leftSummary.dates[date] : null;
                         const rData = (this.rightSummary && this.rightSummary.dates && this.rightSummary.dates[date]) ? this.rightSummary.dates[date] : null;
 
-                        const leftDriveName = this.leftDrive || "";
-                        const rightDriveName = this.rightDrive || "";
+                        const leftDriveName = (this.leftDrive || "").replace(/\s*\([^)]*\)$/, '');
+                        const rightDriveName = (this.rightDrive || "").replace(/\s*\([^)]*\)$/, '');
 
                         let leftCount = 0;
                         let leftSize = 0;

@@ -886,18 +886,17 @@ def scan():
     """Run scan for recording files"""
     try:
         from flask import request
-        req_data = request.get_json(silent=True) or {}
-        if req_data.get('clear', False):
-            if METADATA_FILE.exists():
-                try:
-                    METADATA_FILE.unlink()
-                except Exception as e:
-                    print(f"Error clearing metadata: {e}")
-            if BACKLOG_FILE.exists():
-                try:
-                    BACKLOG_FILE.unlink()
-                except Exception as e:
-                    print(f"Error clearing backlog: {e}")
+        # Always clear before scanning to prevent double counting
+        if METADATA_FILE.exists():
+            try:
+                METADATA_FILE.unlink()
+            except Exception as e:
+                print(f"Error clearing metadata: {e}")
+        if BACKLOG_FILE.exists():
+            try:
+                BACKLOG_FILE.unlink()
+            except Exception as e:
+                print(f"Error clearing backlog: {e}")
 
         scan_result = scan_all_drives()
         

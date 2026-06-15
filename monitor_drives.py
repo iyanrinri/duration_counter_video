@@ -417,6 +417,16 @@ def check_new_drives():
     if new_drives:
         print(f"\n[{datetime.now()}] New drive(s) detected: {new_drives}")
         
+        # Clear previous data to prevent double counting during autoscan
+        try:
+            if os.path.exists(LOG_FILE):
+                os.remove(LOG_FILE)
+            if os.path.exists("backlog.json"):
+                os.remove("backlog.json")
+            print("Cleared previous logs to prevent double counting.")
+        except Exception as e:
+            print(f"Error clearing logs: {e}")
+        
         for drive in new_drives:
             # Use actual volume label for display
             drive_label = get_drive_label(drive)
