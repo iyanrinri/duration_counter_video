@@ -1,0 +1,41 @@
+{
+  "total_files": 3,
+  "total_duration_seconds": 7413.886,
+  "total_file_size": 24029410817,
+  "files": [
+    {
+      "timestamp": "2026-06-17T14:09:51.297644",
+      "recorded_date": "2026-06-09",
+      "file_path": "G:\\recording\\atlascm2780\\2026-06-09\\0001_1780982919\\recording.mp4",
+      "drive_name": "07H-6061213",
+      "md5_first_1mb": "5b8fcade22689475331d054b22dd25a9",
+      "duration_seconds": 1891.039,
+      "file_size": 6148041558,
+      "camera_id": "atlascm2780"
+    },
+    {
+      "timestamp": "2026-06-17T14:09:51.298328",
+      "recorded_date": "2026-06-09",
+      "file_path": "G:\\recording\\atlascm2780\\2026-06-09\\0001_1780982919\\recording.mp4",
+      "drive_name": "07H-6061213",
+      "md5_first_1mb": "5b8fcade22689475331d054b22dd25a9",
+      "duration_seconds": 1891.039,
+      "file_size": 6148041558,
+      "camera_id": "atlascm2780"
+    },
+    {
+      "timestamp": "2026-06-17T14:09:51.509113",
+      "recorded_date": "2026-06-09",
+      "file_path": "G:\\recording\\atlascm2780\\2026-06-09\\0002_1780982919\\recording.mp4",
+      "drive_name": "07H-6061213",
+      "md5_first_1mb": "1d3732bc0e97935592fc980745409c8b",
+      "duration_seconds": 3631.808,
+      "file_size": 11733327701,
+      "camera_id": "atlascm2780"
+    }
+  ],
+  "last_updated": "2026-06-17T14:09:51.522694",
+  "total_duration_formatted": "2h 3m 33s",
+  "total_file_size_mb": 22916.23
+}3
+}

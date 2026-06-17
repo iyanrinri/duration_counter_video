@@ -11,7 +11,17 @@ import psutil
 import urllib.request
 import time
 from dotenv import load_dotenv
+import sqlite3
 
+
+import ctypes
+
+# Single instance lock for app.py
+if os.environ.get("WERKZEUG_RUN_MAIN") != "true":
+    _app_mutex = ctypes.windll.kernel32.CreateMutexW(None, False, "Global\\DurationCounterAppMutex")
+    if ctypes.windll.kernel32.GetLastError() == 183: # ERROR_ALREADY_EXISTS
+        print("Another instance of app.py is already running. Exiting.")
+        sys.exit(0)
 
 # Load env variables
 load_dotenv()
@@ -20,8 +30,7 @@ app = Flask(__name__)
 
 # Path configuration
 BASE_DIR = Path(__file__).parent
-METADATA_FILE = BASE_DIR / "recording_metadata.jsonl"
-BACKLOG_FILE = BASE_DIR / "backlog.json"
+DB_FILE = BASE_DIR / "database.sqlite"
 PENDING_WEBHOOKS_FILE = BASE_DIR / "pending_webhooks.json"
 VENV_PATH = BASE_DIR / "venv"
 TEMPLATE_FILE = BASE_DIR / "templates" / "index.html"
@@ -264,28 +273,82 @@ for d in EXCLUDE_DRIVES_ENV.split(","):
 
 
 
+def init_db():
+    conn = sqlite3.connect(DB_FILE)
+    cursor = conn.cursor()
+    cursor.execute('''
+        CREATE TABLE IF NOT EXISTS recordings (
+            hash TEXT PRIMARY KEY,
+            file_path TEXT,
+            drive_name TEXT,
+            file_size INTEGER,
+            duration_seconds REAL,
+            recorded_date TEXT,
+            camera_id TEXT,
+            folder_name TEXT,
+            timestamp TEXT,
+            file_modified_at TEXT
+        )
+    ''')
+    conn.commit()
+    conn.close()
+
+init_db()
+
 def get_data():
-    """Read and return data from JSON files"""
+    """Read and return data from SQLite database"""
     metadata = []
-    backlog = {}
+    backlog = {
+        "total_files": 0,
+        "total_duration_seconds": 0,
+        "total_file_size": 0,
+        "files": [],
+        "last_updated": None
+    }
 
-    # Read recording metadata
-    if METADATA_FILE.exists():
-        try:
-            with open(METADATA_FILE, 'r') as f:
-                for line in f:
-                    if line.strip():
-                        metadata.append(json.loads(line))
-        except Exception as e:
-            print(f"Error reading metadata: {e}")
+    if not DB_FILE.exists():
+        return {"metadata": metadata, "backlog": backlog}
 
-    # Read backlog
-    if BACKLOG_FILE.exists():
-        try:
-            with open(BACKLOG_FILE, 'r') as f:
-                backlog = json.load(f)
-        except Exception as e:
-            print(f"Error reading backlog: {e}")
+    try:
+        conn = sqlite3.connect(DB_FILE)
+        conn.row_factory = sqlite3.Row
+        cursor = conn.cursor()
+        
+        cursor.execute("SELECT * FROM recordings ORDER BY timestamp DESC")
+        rows = cursor.fetchall()
+        
+        total_duration = 0
+        total_size = 0
+        
+        for row in rows:
+            item = dict(row)
+            item["md5_first_1mb"] = item.pop("hash")
+            
+            # Check if file still exists / drive is plugged in
+            if not os.path.exists(item.get("file_path", "")):
+                continue
+                
+            metadata.append(item)
+            backlog["files"].append(item)
+            
+            total_duration += item.get("duration_seconds") or 0
+            total_size += item.get("file_size") or 0
+            
+        backlog["total_files"] = len(rows)
+        backlog["total_duration_seconds"] = total_duration
+        backlog["total_file_size"] = total_size
+        
+        hours = int(total_duration // 3600)
+        minutes = int((total_duration % 3600) // 60)
+        backlog["total_duration_formatted"] = f"{hours} Jam {minutes} Menit"
+        backlog["total_file_size_mb"] = round(total_size / (1024 * 1024), 2)
+        
+        if metadata:
+            backlog["last_updated"] = metadata[0]["timestamp"]
+            
+        conn.close()
+    except Exception as e:
+        print(f"Error reading database: {e}")
 
     return {
         "metadata": metadata,
@@ -591,68 +654,45 @@ def process_file(file_path, drive_name="Unknown Drive"):
 
 
 def log_metadata(metadata):
-    """Log metadata ke file (JSON Lines format)"""
+    """Log metadata to SQLite database"""
     try:
-        with open(METADATA_FILE, "a", encoding="utf-8") as f:
-            f.write(json.dumps(metadata) + "\n")
-        print(f"Logged: {metadata['file_path']}")
+        conn = sqlite3.connect(DB_FILE)
+        cursor = conn.cursor()
         
-        # Update backlog.json
-        update_backlog(metadata)
+        cursor.execute('''
+            INSERT INTO recordings (
+                hash, file_path, drive_name, file_size, duration_seconds, 
+                recorded_date, camera_id, folder_name, timestamp, file_modified_at
+            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+            ON CONFLICT(hash) DO UPDATE SET
+                file_path=excluded.file_path,
+                drive_name=excluded.drive_name,
+                file_size=excluded.file_size,
+                duration_seconds=excluded.duration_seconds,
+                recorded_date=excluded.recorded_date,
+                camera_id=excluded.camera_id,
+                folder_name=excluded.folder_name,
+                timestamp=excluded.timestamp,
+                file_modified_at=excluded.file_modified_at
+        ''', (
+            metadata.get("md5_first_1mb"),
+            metadata.get("file_path"),
+            metadata.get("drive_name"),
+            metadata.get("file_size"),
+            metadata.get("duration_seconds"),
+            metadata.get("recorded_date"),
+            metadata.get("camera_id"),
+            metadata.get("folder_name"),
+            metadata.get("timestamp"),
+            metadata.get("file_modified_at")
+        ))
+        
+        conn.commit()
+        conn.close()
+        print(f"Logged to DB: {metadata.get('file_path')}")
+        
     except Exception as e:
-        print(f"Error logging metadata: {e}")
-
-
-def update_backlog(metadata):
-    """Update backlog.json dengan summary/total"""
-    try:
-        # Load existing backlog
-        if BACKLOG_FILE.exists():
-            with open(BACKLOG_FILE, "r", encoding="utf-8") as f:
-                backlog = json.load(f)
-        else:
-            backlog = {
-                "total_files": 0,
-                "total_duration_seconds": 0,
-                "total_file_size": 0,
-                "files": [],
-                "last_updated": None
-            }
-        
-        # Update totals
-        backlog["total_files"] += 1
-        backlog["total_duration_seconds"] += metadata.get("duration_seconds", 0) or 0
-        backlog["total_file_size"] += metadata.get("file_size", 0)
-        backlog["last_updated"] = datetime.now().isoformat()
-        
-        # Add file entry
-        backlog["files"].append({
-            "timestamp": metadata["timestamp"],
-            "recorded_date": metadata.get("recorded_date"),
-            "file_path": metadata["file_path"],
-            "drive_name": metadata.get("drive_name", "Unknown Drive"),
-            "md5_first_1mb": metadata["md5_first_1mb"],
-            "duration_seconds": metadata["duration_seconds"],
-            "file_size": metadata["file_size"],
-            "camera_id": metadata.get("camera_id")
-        })
-        
-        # Calculate formatted totals
-        total_seconds = backlog["total_duration_seconds"]
-        hours = int(total_seconds // 3600)
-        minutes = int((total_seconds % 3600) // 60)
-        seconds = int(total_seconds % 60)
-        
-        backlog["total_duration_formatted"] = f"{hours} Jam {minutes} Menit"
-        backlog["total_file_size_mb"] = round(backlog["total_file_size"] / (1024 * 1024), 2)
-        
-        # Save backlog
-        with open(BACKLOG_FILE, "w", encoding="utf-8") as f:
-            json.dump(backlog, f, indent=2, ensure_ascii=False)
-        
-        print(f"Backlog updated: {backlog['total_files']} files, {backlog['total_duration_formatted']}")
-    except Exception as e:
-        print(f"Error updating backlog: {e}")
+        print(f"Error logging to DB: {e}")
 
 
 def save_pending_webhook(payload):
@@ -827,6 +867,18 @@ def scan_all_drives():
         files_found = 0
         files_processed = 0
         
+        existing_hashes = set()
+        if DB_FILE.exists():
+            try:
+                conn = sqlite3.connect(DB_FILE)
+                cursor = conn.cursor()
+                cursor.execute("SELECT hash FROM recordings")
+                for row in cursor.fetchall():
+                    existing_hashes.add(row[0])
+                conn.close()
+            except Exception as e:
+                print(f"Error reading hashes from DB: {e}")
+
         for drive in drives:
             try:
                 # Use actual volume label for display
@@ -846,8 +898,13 @@ def scan_all_drives():
                         metadata = process_file(file_path, drive_name=drive_label)
                         if metadata:
                             log_metadata(metadata)
-                            files_processed += 1
-                            drive_processed_metadata.append(metadata)
+                            
+                            if metadata.get("md5_first_1mb") not in existing_hashes:
+                                existing_hashes.add(metadata.get("md5_first_1mb"))
+                                files_processed += 1
+                                drive_processed_metadata.append(metadata)
+                            else:
+                                print(f"Updated existing file in DB: {file_path}")
                     
                     if drive_processed_metadata:
                         send_webhook(drive_processed_metadata)
@@ -886,18 +943,6 @@ def scan():
     """Run scan for recording files"""
     try:
         from flask import request
-        # Always clear before scanning to prevent double counting
-        if METADATA_FILE.exists():
-            try:
-                METADATA_FILE.unlink()
-            except Exception as e:
-                print(f"Error clearing metadata: {e}")
-        if BACKLOG_FILE.exists():
-            try:
-                BACKLOG_FILE.unlink()
-            except Exception as e:
-                print(f"Error clearing backlog: {e}")
-
         scan_result = scan_all_drives()
         
         # Return updated data
@@ -918,17 +963,17 @@ def scan():
 
 @app.route('/api/clear', methods=['POST'])
 def clear():
-    """Clear/delete JSON files"""
+    """Clear/delete database records"""
     try:
         deleted_files = []
 
-        if METADATA_FILE.exists():
-            METADATA_FILE.unlink()
-            deleted_files.append("recording_metadata.jsonl")
-
-        if BACKLOG_FILE.exists():
-            BACKLOG_FILE.unlink()
-            deleted_files.append("backlog.json")
+        if DB_FILE.exists():
+            conn = sqlite3.connect(DB_FILE)
+            cursor = conn.cursor()
+            cursor.execute("DELETE FROM recordings")
+            conn.commit()
+            conn.close()
+            deleted_files.append("database.sqlite records")
 
         return jsonify({
             "status": "success",
@@ -978,15 +1023,17 @@ def monitor_usb_drives():
                     print(f"New drive detected: {d}")
                 known_drives = current_drives
                 
-                time.sleep(3) # Wait for mount
+                print("Waiting 5 seconds before scanning as requested...")
+                time.sleep(5) # Wait for mount and as requested
                 print("Triggering auto-scan...")
                 scan_all_drives()
         except Exception as e:
             print(f"Error in USB monitor: {e}")
 
-# Start the thread
-usb_thread = threading.Thread(target=monitor_usb_drives, daemon=True)
-usb_thread.start()
+# Start the thread only once (prevent double run in debug mode)
+if os.environ.get("WERKZEUG_RUN_MAIN") == "true" or not app.debug:
+    usb_thread = threading.Thread(target=monitor_usb_drives, daemon=True)
+    usb_thread.start()
 
 if __name__ == '__main__':
     app.run(debug=True, host='127.0.0.1', port=5000)

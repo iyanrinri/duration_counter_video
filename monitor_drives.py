@@ -12,11 +12,22 @@ import re
 from dotenv import load_dotenv
 
 
+import ctypes
+import sys
+
+# Single instance lock for monitor_drives.py
+_monitor_mutex = ctypes.windll.kernel32.CreateMutexW(None, False, "Global\\DurationCounterMonitorMutex")
+if ctypes.windll.kernel32.GetLastError() == 183: # ERROR_ALREADY_EXISTS
+    print("Another instance of monitor_drives.py is already running. Exiting.")
+    sys.exit(0)
+
 # Load env variables
 load_dotenv()
 
+import sqlite3
+
 # Configuration
-LOG_FILE = "recording_metadata.jsonl"
+DB_FILE = "database.sqlite"
 CHECK_INTERVAL = 5  # seconds
 FIRST_MB = 1024 * 1024  # 1MB in bytes
 SEARCH_FILENAME = "recording.mp4"  # Exact filename only
@@ -242,21 +253,26 @@ def get_video_duration(file_path):
 
 
 def find_recording_files(drive_path):
-    """Find recording.mp4 or any .mp4 files if in DCIM folder"""
+    """Find recording.mp4 or any .mp4 files if in DCIM or recording folder"""
     files_found = []
     search_name = SEARCH_FILENAME.lower()
     
     try:
         # Menggunakan os.walk karena lebih tahan terhadap PermissionError
         for root, dirs, files in os.walk(drive_path):
-            # Check if "DCIM" is in any part of the current path
-            path_parts = root.upper().replace('\\', '/').split('/')
-            is_dcim = "DCIM" in path_parts
+            # Check if "DCIM" or "recording" is in any part of the current path
+            path_str = root.replace('\\', '/').lower()
+            path_parts = path_str.split('/')
+            is_dcim = "dcim" in path_parts
+            is_recording = "recording" in path_parts
             
             for file in files:
                 file_lower = file.lower()
-                if is_dcim:
-                    # If inside a DCIM folder, take all .mp4 files
+                if "secondary" in file_lower:
+                    continue
+                    
+                if is_dcim or is_recording:
+                    # If inside a DCIM or recording folder, take all .mp4 files
                     if file_lower.endswith(".mp4"):
                         full_path = os.path.join(root, file)
                         files_found.append(full_path)
@@ -294,8 +310,25 @@ def process_file(file_path, drive_name="Unknown Drive"):
         mtime = os.path.getmtime(file_path)
         modified_at = datetime.fromtimestamp(mtime).isoformat()
 
+        # Extract camera_id and folder_name if inside 'recording' folder
+        camera_id = None
+        folder_name = None
+        path_parts = file_path.replace('\\', '/').lower().split('/')
+        if "recording" in path_parts:
+            idx = path_parts.index("recording")
+            original_parts = file_path.replace('\\', '/').split('/')
+            if idx + 1 < len(original_parts):
+                camera_id = original_parts[idx + 1]
+            if idx + 2 < len(original_parts):
+                folder_name = original_parts[idx + 2]
+
+        recorded_date = extract_date_from_path(file_path)
+        if "recording" in path_parts and folder_name:
+            recorded_date = folder_name
+
         metadata = {
             "timestamp": current_time,
+            "recorded_date": recorded_date,
             "file_modified_at": modified_at,
             "file_path": file_path,
             "drive_name": drive_name,
@@ -307,6 +340,8 @@ def process_file(file_path, drive_name="Unknown Drive"):
                 if duration
                 else None
             ),
+            "camera_id": camera_id,
+            "folder_name": folder_name,
         }
 
         return metadata
@@ -316,68 +351,59 @@ def process_file(file_path, drive_name="Unknown Drive"):
 
 
 def log_metadata(metadata):
-    """Log metadata ke file (JSON Lines format)"""
+    """Log metadata ke SQLite database"""
     try:
-        with open(LOG_FILE, "a", encoding="utf-8") as f:
-            f.write(json.dumps(metadata) + "\n")
-        print(f"Logged: {metadata['file_path']}")
+        conn = sqlite3.connect(DB_FILE)
+        cursor = conn.cursor()
         
-        # Update backlog.json
-        update_backlog(metadata)
+        cursor.execute('''
+            CREATE TABLE IF NOT EXISTS recordings (
+                hash TEXT PRIMARY KEY,
+                file_path TEXT,
+                drive_name TEXT,
+                file_size INTEGER,
+                duration_seconds REAL,
+                recorded_date TEXT,
+                camera_id TEXT,
+                folder_name TEXT,
+                timestamp TEXT,
+                file_modified_at TEXT
+            )
+        ''')
+        
+        cursor.execute('''
+            INSERT INTO recordings (
+                hash, file_path, drive_name, file_size, duration_seconds, 
+                recorded_date, camera_id, folder_name, timestamp, file_modified_at
+            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+            ON CONFLICT(hash) DO UPDATE SET
+                file_path=excluded.file_path,
+                drive_name=excluded.drive_name,
+                file_size=excluded.file_size,
+                duration_seconds=excluded.duration_seconds,
+                recorded_date=excluded.recorded_date,
+                camera_id=excluded.camera_id,
+                folder_name=excluded.folder_name,
+                timestamp=excluded.timestamp,
+                file_modified_at=excluded.file_modified_at
+        ''', (
+            metadata.get("md5_first_1mb"),
+            metadata.get("file_path"),
+            metadata.get("drive_name"),
+            metadata.get("file_size"),
+            metadata.get("duration_seconds"),
+            metadata.get("recorded_date"),
+            metadata.get("camera_id"),
+            metadata.get("folder_name"),
+            metadata.get("timestamp"),
+            metadata.get("file_modified_at")
+        ))
+        
+        conn.commit()
+        conn.close()
+        print(f"Logged to DB: {metadata['file_path']}")
     except Exception as e:
-        print(f"Error logging metadata: {e}")
-
-
-def update_backlog(metadata):
-    """Update backlog.json dengan summary/total"""
-    try:
-        backlog_file = "backlog.json"
-        
-        # Load existing backlog
-        if os.path.exists(backlog_file):
-            with open(backlog_file, "r", encoding="utf-8") as f:
-                backlog = json.load(f)
-        else:
-            backlog = {
-                "total_files": 0,
-                "total_duration_seconds": 0,
-                "total_file_size": 0,
-                "files": [],
-                "last_updated": None
-            }
-        
-        # Update totals
-        backlog["total_files"] += 1
-        backlog["total_duration_seconds"] += metadata.get("duration_seconds", 0) or 0
-        backlog["total_file_size"] += metadata.get("file_size", 0)
-        backlog["last_updated"] = datetime.now().isoformat()
-        
-        # Add file entry
-        backlog["files"].append({
-            "timestamp": metadata["timestamp"],
-            "file_path": metadata["file_path"],
-            "drive_name": metadata.get("drive_name", "Unknown Drive"),
-            "md5_first_1mb": metadata["md5_first_1mb"],
-            "duration_seconds": metadata["duration_seconds"],
-            "file_size": metadata["file_size"]
-        })
-        
-        # Calculate formatted totals
-        total_seconds = backlog["total_duration_seconds"]
-        hours = int(total_seconds // 3600)
-        minutes = int((total_seconds % 3600) // 60)
-        seconds = int(total_seconds % 60)
-        
-        backlog["total_duration_formatted"] = f"{hours}h {minutes}m {seconds}s"
-        backlog["total_file_size_mb"] = round(backlog["total_file_size"] / (1024 * 1024), 2)
-        
-        # Save backlog
-        with open(backlog_file, "w", encoding="utf-8") as f:
-            json.dump(backlog, f, indent=2, ensure_ascii=False)
-        
-        print(f"Backlog updated: {backlog['total_files']} files, {backlog['total_duration_formatted']}")
-    except Exception as e:
-        print(f"Error updating backlog: {e}")
+        print(f"Error logging to DB: {e}")
 
 
 def get_connected_drives():
@@ -417,15 +443,24 @@ def check_new_drives():
     if new_drives:
         print(f"\n[{datetime.now()}] New drive(s) detected: {new_drives}")
         
-        # Clear previous data to prevent double counting during autoscan
+        print("Waiting 5 seconds before scanning as requested...")
+        time.sleep(5)
+        
+        existing_hashes = set()
         try:
-            if os.path.exists(LOG_FILE):
-                os.remove(LOG_FILE)
-            if os.path.exists("backlog.json"):
-                os.remove("backlog.json")
-            print("Cleared previous logs to prevent double counting.")
+            conn = sqlite3.connect(DB_FILE)
+            cursor = conn.cursor()
+            cursor.execute('''
+                CREATE TABLE IF NOT EXISTS recordings (
+                    hash TEXT PRIMARY KEY
+                )
+            ''')
+            cursor.execute("SELECT hash FROM recordings")
+            for row in cursor.fetchall():
+                existing_hashes.add(row[0])
+            conn.close()
         except Exception as e:
-            print(f"Error clearing logs: {e}")
+            print(f"Error reading hashes from DB: {e}")
         
         for drive in new_drives:
             # Use actual volume label for display
@@ -442,6 +477,11 @@ def check_new_drives():
                 for file_path in files:
                     metadata = process_file(file_path, drive_name=drive_label)
                     if metadata:
+                        if metadata.get("md5_first_1mb") not in existing_hashes:
+                            existing_hashes.add(metadata.get("md5_first_1mb"))
+                        else:
+                            print(f"Updating existing file in DB: {file_path}")
+                        
                         log_metadata(metadata)
             else:
                 print(f"No recording files found in {drive}")
@@ -452,7 +492,7 @@ def check_new_drives():
 def monitor_loop():
     """Main monitoring loop"""
     print("Starting drive monitor...")
-    print(f"Log file: {os.path.abspath(LOG_FILE)}")
+    print(f"Database file: {os.path.abspath(DB_FILE)}")
     print(f"Check interval: {CHECK_INTERVAL} seconds\n")
 
     try:
@@ -477,7 +517,7 @@ if __name__ == "__main__":
     print("=" * 60)
     print("=" * 60)
     print(f"Start time: {datetime.now()}")
-    print(f"Output file: {LOG_FILE}")
+    print(f"Database file: {DB_FILE}")
     print(f"Searching for: {SEARCH_FILENAME}")
     print("=" * 60 + "\n")
 
