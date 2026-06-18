@@ -16,12 +16,28 @@ import sqlite3
 
 import ctypes
 
-# Single instance lock for app.py
+# Single instance lock untuk app.py (Cross-platform menggunakan file lock)
 if os.environ.get("WERKZEUG_RUN_MAIN") != "true":
-    _app_mutex = ctypes.windll.kernel32.CreateMutexW(None, False, "Global\\DurationCounterAppMutex")
-    if ctypes.windll.kernel32.GetLastError() == 183: # ERROR_ALREADY_EXISTS
-        print("Another instance of app.py is already running. Exiting.")
-        sys.exit(0)
+    LOCK_FILE = Path(__file__).parent / "app.lock"
+    
+    if os.name == 'nt':
+        # Blok khusus Windows menggunakan ctypes seperti bawaan Anda
+        import ctypes
+        _app_mutex = ctypes.windll.kernel32.CreateMutexW(None, False, "Global\\DurationCounterAppMutex")
+        if ctypes.windll.kernel32.GetLastError() == 183: # ERROR_ALREADY_EXISTS
+            print("Another instance of app.py is already running. Exiting.")
+            sys.exit(0)
+    else:
+        # Blok khusus Linux / Unix menggunakan fcntl
+        import fcntl
+        try:
+            # Membuka atau membuat file lock
+            lock_file_handle = open(LOCK_FILE, 'w')
+            # Mencoba mengunci file, jika gagal akan melempar IOError
+            fcntl.lockf(lock_file_handle, fcntl.LOCK_EX | fcntl.LOCK_NB)
+        except IOError:
+            print("Another instance of app.py is already running (Linux Lock). Exiting.")
+            sys.exit(0)
 
 # Load env variables
 load_dotenv()
