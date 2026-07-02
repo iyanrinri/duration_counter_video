@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -171,7 +172,9 @@
         }
 
         @keyframes spin {
-            to { transform: rotate(360deg); }
+            to {
+                transform: rotate(360deg);
+            }
         }
 
         .summary {
@@ -235,7 +238,7 @@
         }
 
         .date-group.expanded {
-            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
             border-color: #667eea;
         }
 
@@ -333,7 +336,7 @@
             margin-bottom: 12px;
             border: 1px solid #edf2f7;
             border-radius: 8px;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
         }
 
         .date-header {
@@ -415,19 +418,25 @@
         }
 
         /* Animations */
-        .fade-enter-active, .fade-leave-active {
+        .fade-enter-active,
+        .fade-leave-active {
             transition: opacity 0.3s ease;
         }
-        .fade-enter-from, .fade-leave-to {
+
+        .fade-enter-from,
+        .fade-leave-to {
             opacity: 0;
         }
 
-        .slide-enter-active, .slide-leave-active {
+        .slide-enter-active,
+        .slide-leave-active {
             transition: max-height 0.3s ease-out, opacity 0.3s ease;
             max-height: 2000px;
             overflow: hidden;
         }
-        .slide-enter-from, .slide-leave-to {
+
+        .slide-enter-from,
+        .slide-leave-to {
             max-height: 0;
             opacity: 0;
         }
@@ -548,8 +557,15 @@
         }
 
         @keyframes modalFadeIn {
-            from { opacity: 0; transform: translateY(-20px); }
-            to { opacity: 1; transform: translateY(0); }
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
 
         .modal-header h3 {
@@ -649,7 +665,7 @@
             align-items: center;
             justify-content: space-between;
         }
-        
+
         .compare-header select {
             padding: 8px 12px;
             border-radius: 6px;
@@ -666,17 +682,17 @@
             border-radius: 8px;
             padding: 15px;
             margin-bottom: 20px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.02);
             border: 1px solid #edf2f7;
         }
-        
+
         .compare-row {
             display: flex;
             justify-content: space-between;
             margin-bottom: 8px;
             font-size: 14px;
         }
-        
+
         .compare-row:last-child {
             margin-bottom: 0;
         }
@@ -684,12 +700,12 @@
         .compare-label {
             color: #718096;
         }
-        
+
         .compare-value {
             font-weight: 600;
             color: #2d3748;
         }
-        
+
         .compare-date-card {
             background: white;
             border-radius: 8px;
@@ -707,7 +723,7 @@
             border-left-color: #f56565;
             opacity: 0.7;
         }
-        
+
         .compare-date-title {
             font-weight: 600;
             margin-bottom: 10px;
@@ -725,12 +741,19 @@
         }
     </style>
 </head>
+
 <body>
     <div id="app">
         <div class="container">
             <header>
                 <h1>
-                    <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.2 6 3 11l-.9-2.4c-.3-1.1.3-2.2 1.3-2.5l13.5-4c1.1-.3 2.2.3 2.5 1.3Z"/><path d="m6.2 5.3 3.1 3.9"/><path d="m12.4 3.4 3.1 4"/><path d="M3 11h18v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2Z"/></svg>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none"
+                        stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M20.2 6 3 11l-.9-2.4c-.3-1.1.3-2.2 1.3-2.5l13.5-4c1.1-.3 2.2.3 2.5 1.3Z" />
+                        <path d="m6.2 5.3 3.1 3.9" />
+                        <path d="m12.4 3.4 3.1 4" />
+                        <path d="M3 11h18v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2Z" />
+                    </svg>
                     Duration Counter
                 </h1>
                 <p>Recording Monitor & Metadata Logger</p>
@@ -740,218 +763,385 @@
                 <!-- Tabs -->
                 <div class="tabs">
                     <button :class="['tab-btn', { active: currentTab === 'monitor' }]" @click="currentTab = 'monitor'">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none"
+                            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <rect x="2" y="3" width="20" height="14" rx="2" ry="2" />
+                            <line x1="8" y1="21" x2="16" y2="21" />
+                            <line x1="12" y1="17" x2="12" y2="21" />
+                        </svg>
                         Main Monitor
                     </button>
                     <button :class="['tab-btn', { active: currentTab === 'compare' }]" @click="currentTab = 'compare'">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 3v18"/><path d="M10 10V4a1 1 0 0 0-1-1H3a1 1 0 0 0-1 1v6a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1Z"/><path d="M10 20v-6a1 1 0 0 0-1-1H3a1 1 0 0 0-1 1v6a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1Z"/><path d="M22 14v-4a1 1 0 0 0-1-1h-2a1 1 0 0 0-1 1v4a1 1 0 0 0 1 1h2a1 1 0 0 0 1-1Z"/></svg>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none"
+                            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M17 3v18" />
+                            <path d="M10 10V4a1 1 0 0 0-1-1H3a1 1 0 0 0-1 1v6a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1Z" />
+                            <path d="M10 20v-6a1 1 0 0 0-1-1H3a1 1 0 0 0-1 1v6a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1Z" />
+                            <path d="M22 14v-4a1 1 0 0 0-1-1h-2a1 1 0 0 0-1 1v4a1 1 0 0 0 1 1h2a1 1 0 0 0 1-1Z" />
+                        </svg>
                         Wrist Cam Compare
                     </button>
                 </div>
 
                 <!-- Main Monitor View -->
                 <div v-show="currentTab === 'monitor'">
-                <!-- Controls -->
-                <div class="controls">
-                    <button class="btn-scan" @click="scanDrives" :disabled="isLoading">
-                        <span v-if="isLoading" class="spinner"></span>
-                        <svg v-else xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
-                        <span>{{ isLoading ? 'Scanning...' : 'Scan Drives' }}</span>
-                    </button>
-                    <button class="btn-clear" @click="clearData" :disabled="isLoading" v-if="hasData">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/><line x1="10" x2="10" y1="11" y2="17"/><line x1="14" x2="14" y1="11" y2="17"/></svg>
-                        <span>Clear All Data</span>
-                    </button>
-                </div>
+                    <!-- Controls -->
+                    <div class="controls">
+                        <button class="btn-scan" @click="scanDrives" :disabled="isLoading">
+                            <span v-if="isLoading" class="spinner"></span>
+                            <svg v-else xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24"
+                                fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                stroke-linejoin="round">
+                                <circle cx="11" cy="11" r="8" />
+                                <path d="m21 21-4.3-4.3" />
+                            </svg>
+                            <span>{{ isLoading ? 'Scanning...' : 'Scan Drives' }}</span>
+                        </button>
+                        <button class="btn-clear" @click="clearData" :disabled="isLoading" v-if="hasData">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24"
+                                fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                stroke-linejoin="round">
+                                <path d="M3 6h18" />
+                                <path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6" />
+                                <path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2" />
+                                <line x1="10" x2="10" y1="11" y2="17" />
+                                <line x1="14" x2="14" y1="11" y2="17" />
+                            </svg>
+                            <span>Clear All Data</span>
+                        </button>
+                    </div>
 
-                <!-- Status Message -->
-                <transition name="fade">
-                    <div v-if="statusMessage" :class="['status', statusType]">
-                        <span v-if="statusType === 'loading'" class="spinner"></span>
-                        <svg v-if="statusType === 'success'" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><path d="m9 11 3 3L22 4"/></svg>
-                        <svg v-if="statusType === 'error'" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="m15 9-6 6"/><path d="m9 9 6 6"/></svg>
-                        <span>{{ statusMessage }}</span>
-                    </div>
-                </transition>
+                    <!-- Status Message -->
+                    <transition name="fade">
+                        <div v-if="statusMessage" :class="['status', statusType]">
+                            <span v-if="statusType === 'loading'" class="spinner"></span>
+                            <svg v-if="statusType === 'success'" xmlns="http://www.w3.org/2000/svg" width="18"
+                                height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" />
+                                <path d="m9 11 3 3L22 4" />
+                            </svg>
+                            <svg v-if="statusType === 'error'" xmlns="http://www.w3.org/2000/svg" width="18" height="18"
+                                viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                stroke-linecap="round" stroke-linejoin="round">
+                                <circle cx="12" cy="12" r="10" />
+                                <path d="m15 9-6 6" />
+                                <path d="m9 9 6 6" />
+                            </svg>
+                            <span>{{ statusMessage }}</span>
+                        </div>
+                    </transition>
 
-                <!-- Summary Cards -->
-                <div class="summary" v-if="hasData">
-                    <div class="summary-card">
-                        <h3>Total Files</h3>
-                        <div class="value">
-                            <span>{{ backlog.total_files || 0 }}</span>
-                            <button class="copy-btn" title="Copy Count" @click.stop="copyToClipboard(backlog.total_files || 0)">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
-                            </button>
-                        </div>
-                    </div>
-                    <div class="summary-card">
-                        <h3>Total Duration</h3>
-                        <div class="value">
-                            <span>{{ backlog.total_duration_formatted || '0 Jam 0 Menit' }}</span>
-                            <button class="copy-btn" title="Copy Duration" @click.stop="copyToClipboard(backlog.total_duration_formatted || '0 Jam 0 Menit')">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
-                            </button>
-                        </div>
-                    </div>
-                    <div class="summary-card">
-                        <h3>Total Size</h3>
-                        <div class="value">
-                            <span>{{ formatFileSize(backlog.total_file_size || 0) }}</span>
-                            <button class="copy-btn" title="Copy Size" @click.stop="copyToClipboard(formatFileSize(backlog.total_file_size || 0))">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
-                            </button>
-                        </div>
-                    </div>
-                    <div class="summary-card">
-                        <h3>Last Updated</h3>
-                        <div class="value" style="font-size: 14px; flex-direction: column; align-items: flex-start; gap: 4px;">
-                            <span style="font-weight: 600; color: #667eea;">{{ timeAgo(backlog.last_updated) }}</span>
-                            <span style="font-size: 11px; opacity: 0.7; font-weight: normal;">{{ formatDate(backlog.last_updated) }}</span>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Empty State -->
-                <div v-if="!hasData && !isLoading" class="empty-state">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-bottom: 15px; color: #cbd5e1;"><polyline points="22 12 16 12 14 15 10 15 8 12 2 12"/><path d="M5.45 5.11 2 12v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6l-3.45-6.89A2 2 0 0 0 16.76 4H7.24a2 2 0 0 0-1.79 1.11z"/></svg>
-                    <p style="font-size: 16px; font-weight: 500;">No data yet</p>
-                    <p style="font-size: 12px; margin-top: 8px;">Click "Scan Drives" to start monitoring</p>
-                </div>
-
-                <!-- Recordings Section (Grouped by Drive & Date) -->
-                <div v-if="Object.keys(grouped).length > 0" class="section">
-                    <div class="section-header">
-                        <h2>
-                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m16 13 5.223 3.482a.5.5 0 0 0 .777-.416V7.87a.5.5 0 0 0-.752-.432L16 10.5"/><rect x="2" y="6" width="14" height="12" rx="2"/></svg>
-                            Backlog ({{ Object.keys(grouped).length }} SD Cards)
-                        </h2>
-                        <div class="section-controls">
-                            <button class="btn-toggle-all" @click="toggleAll(true)" v-if="!allExpanded">Expand All</button>
-                            <button class="btn-toggle-all" @click="toggleAll(false)" v-else>Collapse All</button>
-                        </div>
-                    </div>
-                    
-                    <div class="drives-list">
-                        <div v-for="(drive, driveName) in grouped" :key="driveName" 
-                             :class="['drive-group', { expanded: isDriveExpanded(driveName) }]">
-                            
-                            <!-- Drive Header -->
-                            <div class="drive-header" @click="toggleDrive(driveName)">
-                                <div class="drive-title">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 10h16"/><path d="M4 14h16"/><path d="M19 6H5a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2z"/></svg>
-                                    {{ driveName }}
-                                </div>
-                                <div class="date-info">
-                                    <div class="date-stats">
-                                        <span class="stat-badge sheets-copy-badge" title="Copy row for Google Sheets" @click.stop="copyDriveToSheets(driveName, drive)">
-                                            <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 4px; vertical-align: middle;"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
-                                            Copy to Sheets
-                                        </span>
-                                        <span v-if="drive.camera_id" class="stat-badge sheets-copy-badge" style="color: #ea580c; background: rgba(234, 88, 12, 0.1); border-color: rgba(234, 88, 12, 0.2);" title="Copy Camera ID" @click.stop="copyToClipboard(drive.camera_id)">
-                                            <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 4px; vertical-align: middle;"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
-                                            ID: {{ drive.camera_id }}
-                                        </span>
-                                        <span class="stat-badge">
-                                            {{ drive.file_count }} files
-                                            <button class="copy-btn" title="Copy Count" @click.stop="copyToClipboard(drive.file_count)">
-                                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
-                                            </button>
-                                        </span>
-                                        <span class="stat-badge">
-                                            {{ formatFileSize(drive.total_file_size) }}
-                                            <button class="copy-btn" title="Copy Size" @click.stop="copyToClipboard(formatFileSize(drive.total_file_size))">
-                                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
-                                            </button>
-                                        </span>
-                                        <span class="stat-badge">
-                                            {{ drive.total_duration_formatted }}
-                                            <button class="copy-btn" title="Copy Duration" @click.stop="copyToClipboard(drive.total_duration_formatted)">
-                                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
-                                            </button>
-                                        </span>
-                                    </div>
-                                    <div class="expand-icon" :style="{ transform: isDriveExpanded(driveName) ? 'rotate(180deg)' : 'none' }">
-                                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                            <polyline points="6 9 12 15 18 9"></polyline>
-                                        </svg>
-                                    </div>
-                                </div>
+                    <!-- Summary Cards -->
+                    <div class="summary" v-if="hasData">
+                        <div class="summary-card">
+                            <h3>Total Files</h3>
+                            <div class="value">
+                                <span>{{ backlog.total_files || 0 }}</span>
+                                <button class="copy-btn" title="Copy Count"
+                                    @click.stop="copyToClipboard(backlog.total_files || 0)">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                        stroke-linejoin="round">
+                                        <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+                                        <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+                                    </svg>
+                                </button>
                             </div>
-
-                            <transition name="slide">
-                                <div v-if="isDriveExpanded(driveName)" class="drive-content">
-                                    <div v-for="(group, date) in drive.dates" :key="date" 
-                                         :class="['date-group', { expanded: isDateExpanded(driveName, date) }]">
-                                        
-                                        <div class="date-header" @click="toggleDate(driveName, date)">
-                                            <div class="date-info">
-                                                <div class="date-title">{{ formatDisplayDate(date) }}</div>
-                                                <div class="date-stats">
-                                                    <span class="stat-badge">
-                                                        {{ group.file_count }} files
-                                                        <button class="copy-btn" title="Copy Count" @click.stop="copyToClipboard(group.file_count)">
-                                                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
-                                                        </button>
-                                                    </span>
-                                                    <span class="stat-badge">
-                                                        {{ formatFileSize(group.total_file_size) }}
-                                                        <button class="copy-btn" title="Copy Size" @click.stop="copyToClipboard(formatFileSize(group.total_file_size))">
-                                                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
-                                                        </button>
-                                                    </span>
-                                                    <span class="stat-badge">
-                                                        {{ group.total_duration_formatted }}
-                                                        <button class="copy-btn" title="Copy Duration" @click.stop="copyToClipboard(group.total_duration_formatted)">
-                                                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
-                                                        </button>
-                                                    </span>
-                                                </div>
-                                            </div>
-                                            <div class="expand-icon" :style="{ transform: isDateExpanded(driveName, date) ? 'rotate(180deg)' : 'none' }">
-                                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                                    <polyline points="6 9 12 15 18 9"></polyline>
-                                                </svg>
-                                            </div>
-                                        </div>
-
-                                        <transition name="slide">
-                                            <div v-if="isDateExpanded(driveName, date)" class="recordings-list">
-                                                <div v-for="(recording, idx) in group.files" :key="idx" class="recording-item">
-                                                    <div class="recording-item-header">
-                                                        <div class="recording-item-title">{{ recording.file_path }}</div>
-                                                        <div class="recording-item-time">{{ formatTime(recording.timestamp) }}</div>
-                                                    </div>
-                                                    <div class="recording-item-details">
-                                                        <div class="detail">
-                                                            <span class="detail-label">Duration</span>
-                                                            <span class="detail-value">{{ formatDuration(recording.duration_seconds) }}</span>
-                                                        </div>
-                                                        <div class="detail">
-                                                            <span class="detail-label">Size</span>
-                                                            <span class="detail-value">{{ formatFileSize(recording.file_size) }}</span>
-                                                        </div>
-                                                        <div class="detail">
-                                                            <span class="detail-label">MD5 (1MB)</span>
-                                                            <span class="detail-value" style="font-family: monospace; font-size: 10px;">{{ recording.md5_first_1mb }}</span>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </transition>
-                                    </div>
-                                </div>
-                            </transition>
+                        </div>
+                        <div class="summary-card">
+                            <h3>Total Duration</h3>
+                            <div class="value">
+                                <span>{{ backlog.total_duration_formatted || '0 Jam 0 Menit' }}</span>
+                                <button class="copy-btn" title="Copy Duration"
+                                    @click.stop="copyToClipboard(backlog.total_duration_formatted || '0 Jam 0 Menit')">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                        stroke-linejoin="round">
+                                        <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+                                        <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+                                    </svg>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="summary-card">
+                            <h3>Total Size</h3>
+                            <div class="value">
+                                <span>{{ formatFileSize(backlog.total_file_size || 0) }}</span>
+                                <button class="copy-btn" title="Copy Size"
+                                    @click.stop="copyToClipboard(formatFileSize(backlog.total_file_size || 0))">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                        stroke-linejoin="round">
+                                        <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+                                        <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+                                    </svg>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="summary-card">
+                            <h3>Last Updated</h3>
+                            <div class="value"
+                                style="font-size: 14px; flex-direction: column; align-items: flex-start; gap: 4px;">
+                                <span style="font-weight: 600; color: #667eea;">{{ timeAgo(backlog.last_updated)
+                                    }}</span>
+                                <span style="font-size: 11px; opacity: 0.7; font-weight: normal;">{{
+                                    formatDate(backlog.last_updated) }}</span>
+                            </div>
                         </div>
                     </div>
-                </div>
+
+                    <!-- Empty State -->
+                    <div v-if="!hasData && !isLoading" class="empty-state">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none"
+                            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                            style="margin-bottom: 15px; color: #cbd5e1;">
+                            <polyline points="22 12 16 12 14 15 10 15 8 12 2 12" />
+                            <path
+                                d="M5.45 5.11 2 12v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6l-3.45-6.89A2 2 0 0 0 16.76 4H7.24a2 2 0 0 0-1.79 1.11z" />
+                        </svg>
+                        <p style="font-size: 16px; font-weight: 500;">No data yet</p>
+                        <p style="font-size: 12px; margin-top: 8px;">Click "Scan Drives" to start monitoring</p>
+                    </div>
+
+                    <!-- Recordings Section (Grouped by Drive & Date) -->
+                    <div v-if="Object.keys(grouped).length > 0" class="section">
+                        <div class="section-header">
+                            <h2>
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                                    fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                    stroke-linejoin="round">
+                                    <path
+                                        d="m16 13 5.223 3.482a.5.5 0 0 0 .777-.416V7.87a.5.5 0 0 0-.752-.432L16 10.5" />
+                                    <rect x="2" y="6" width="14" height="12" rx="2" />
+                                </svg>
+                                Backlog ({{ Object.keys(grouped).length }} SD Cards)
+                            </h2>
+                            <div class="section-controls">
+                                <button class="btn-toggle-all" @click="toggleAll(true)" v-if="!allExpanded">Expand
+                                    All</button>
+                                <button class="btn-toggle-all" @click="toggleAll(false)" v-else>Collapse All</button>
+                            </div>
+                        </div>
+
+                        <div class="drives-list">
+                            <div v-for="(drive, driveName) in grouped" :key="driveName"
+                                :class="['drive-group', { expanded: isDriveExpanded(driveName) }]">
+
+                                <!-- Drive Header -->
+                                <div class="drive-header" @click="toggleDrive(driveName)">
+                                    <div class="drive-title">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20"
+                                            viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                            stroke-linecap="round" stroke-linejoin="round">
+                                            <path d="M4 10h16" />
+                                            <path d="M4 14h16" />
+                                            <path
+                                                d="M19 6H5a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2z" />
+                                        </svg>
+                                        {{ driveName }}
+                                    </div>
+                                    <div class="date-info">
+                                        <div class="date-stats">
+                                            <span class="stat-badge sheets-copy-badge"
+                                                title="Copy row for Google Sheets"
+                                                @click.stop="copyDriveToSheets(driveName, drive)">
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12"
+                                                    viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                                    stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                                                    style="margin-right: 4px; vertical-align: middle;">
+                                                    <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+                                                    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1">
+                                                    </path>
+                                                </svg>
+                                                Copy to Sheets
+                                            </span>
+                                            <span v-if="drive.camera_id" class="stat-badge sheets-copy-badge"
+                                                style="color: #ea580c; background: rgba(234, 88, 12, 0.1); border-color: rgba(234, 88, 12, 0.2);"
+                                                title="Copy Camera ID" @click.stop="copyToClipboard(drive.camera_id)">
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12"
+                                                    viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                                    stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                                                    style="margin-right: 4px; vertical-align: middle;">
+                                                    <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+                                                    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1">
+                                                    </path>
+                                                </svg>
+                                                ID: {{ drive.camera_id }}
+                                            </span>
+                                            <span class="stat-badge">
+                                                {{ drive.file_count }} files
+                                                <button class="copy-btn" title="Copy Count"
+                                                    @click.stop="copyToClipboard(drive.file_count)">
+                                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                                                        viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                                        stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                                        <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+                                                        <path
+                                                            d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1">
+                                                        </path>
+                                                    </svg>
+                                                </button>
+                                            </span>
+                                            <span class="stat-badge">
+                                                {{ formatFileSize(drive.total_file_size) }}
+                                                <button class="copy-btn" title="Copy Size"
+                                                    @click.stop="copyToClipboard(formatFileSize(drive.total_file_size))">
+                                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                                                        viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                                        stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                                        <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+                                                        <path
+                                                            d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1">
+                                                        </path>
+                                                    </svg>
+                                                </button>
+                                            </span>
+                                            <span class="stat-badge">
+                                                {{ drive.total_duration_formatted }}
+                                                <button class="copy-btn" title="Copy Duration"
+                                                    @click.stop="copyToClipboard(drive.total_duration_formatted)">
+                                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                                                        viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                                        stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                                        <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+                                                        <path
+                                                            d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1">
+                                                        </path>
+                                                    </svg>
+                                                </button>
+                                            </span>
+                                        </div>
+                                        <div class="expand-icon"
+                                            :style="{ transform: isDriveExpanded(driveName) ? 'rotate(180deg)' : 'none' }">
+                                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none"
+                                                stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                                stroke-linejoin="round">
+                                                <polyline points="6 9 12 15 18 9"></polyline>
+                                            </svg>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <transition name="slide">
+                                    <div v-if="isDriveExpanded(driveName)" class="drive-content">
+                                        <div v-for="(group, date) in drive.dates" :key="date"
+                                            :class="['date-group', { expanded: isDateExpanded(driveName, date) }]">
+
+                                            <div class="date-header" @click="toggleDate(driveName, date)">
+                                                <div class="date-info">
+                                                    <div class="date-title">{{ formatDisplayDate(date) }}</div>
+                                                    <div class="date-stats">
+                                                        <span class="stat-badge">
+                                                            {{ group.file_count }} files
+                                                            <button class="copy-btn" title="Copy Count"
+                                                                @click.stop="copyToClipboard(group.file_count)">
+                                                                <svg xmlns="http://www.w3.org/2000/svg" width="24"
+                                                                    height="24" viewBox="0 0 24 24" fill="none"
+                                                                    stroke="currentColor" stroke-width="2"
+                                                                    stroke-linecap="round" stroke-linejoin="round">
+                                                                    <rect x="9" y="9" width="13" height="13" rx="2"
+                                                                        ry="2"></rect>
+                                                                    <path
+                                                                        d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1">
+                                                                    </path>
+                                                                </svg>
+                                                            </button>
+                                                        </span>
+                                                        <span class="stat-badge">
+                                                            {{ formatFileSize(group.total_file_size) }}
+                                                            <button class="copy-btn" title="Copy Size"
+                                                                @click.stop="copyToClipboard(formatFileSize(group.total_file_size))">
+                                                                <svg xmlns="http://www.w3.org/2000/svg" width="24"
+                                                                    height="24" viewBox="0 0 24 24" fill="none"
+                                                                    stroke="currentColor" stroke-width="2"
+                                                                    stroke-linecap="round" stroke-linejoin="round">
+                                                                    <rect x="9" y="9" width="13" height="13" rx="2"
+                                                                        ry="2"></rect>
+                                                                    <path
+                                                                        d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1">
+                                                                    </path>
+                                                                </svg>
+                                                            </button>
+                                                        </span>
+                                                        <span class="stat-badge">
+                                                            {{ group.total_duration_formatted }}
+                                                            <button class="copy-btn" title="Copy Duration"
+                                                                @click.stop="copyToClipboard(group.total_duration_formatted)">
+                                                                <svg xmlns="http://www.w3.org/2000/svg" width="24"
+                                                                    height="24" viewBox="0 0 24 24" fill="none"
+                                                                    stroke="currentColor" stroke-width="2"
+                                                                    stroke-linecap="round" stroke-linejoin="round">
+                                                                    <rect x="9" y="9" width="13" height="13" rx="2"
+                                                                        ry="2"></rect>
+                                                                    <path
+                                                                        d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1">
+                                                                    </path>
+                                                                </svg>
+                                                            </button>
+                                                        </span>
+                                                    </div>
+                                                </div>
+                                                <div class="expand-icon"
+                                                    :style="{ transform: isDateExpanded(driveName, date) ? 'rotate(180deg)' : 'none' }">
+                                                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none"
+                                                        stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                                        stroke-linejoin="round">
+                                                        <polyline points="6 9 12 15 18 9"></polyline>
+                                                    </svg>
+                                                </div>
+                                            </div>
+
+                                            <transition name="slide">
+                                                <div v-if="isDateExpanded(driveName, date)" class="recordings-list">
+                                                    <div v-for="(recording, idx) in group.files" :key="idx"
+                                                        class="recording-item">
+                                                        <div class="recording-item-header">
+                                                            <div class="recording-item-title">{{ recording.file_path }}
+                                                            </div>
+                                                            <div class="recording-item-time">{{
+                                                                formatTime(recording.timestamp) }}</div>
+                                                        </div>
+                                                        <div class="recording-item-details">
+                                                            <div class="detail">
+                                                                <span class="detail-label">Duration</span>
+                                                                <span class="detail-value">{{
+                                                                    formatDuration(recording.duration_seconds) }}</span>
+                                                            </div>
+                                                            <div class="detail">
+                                                                <span class="detail-label">Size</span>
+                                                                <span class="detail-value">{{
+                                                                    formatFileSize(recording.file_size) }}</span>
+                                                            </div>
+                                                            <div class="detail">
+                                                                <span class="detail-label">MD5 (1MB)</span>
+                                                                <span class="detail-value"
+                                                                    style="font-family: monospace; font-size: 10px;">{{
+                                                                    recording.md5_first_1mb }}</span>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </transition>
+                                        </div>
+                                    </div>
+                                </transition>
+                            </div>
+                        </div>
+                    </div>
                 </div> <!-- End of Main Monitor View -->
-                
+
                 <!-- Compare View -->
                 <div v-if="currentTab === 'compare'">
                     <div class="compare-actions" style="margin-bottom: 20px; display: flex; justify-content: flex-end;">
-                        <button class="btn-scan" style="background: #107c41; color: white;" @click="copyCompareToSheets" :disabled="!leftDrive && !rightDrive">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 4px; vertical-align: middle;"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+                        <button class="btn-scan" style="background: #107c41; color: white;" @click="copyCompareToSheets"
+                            :disabled="!leftDrive && !rightDrive">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24"
+                                fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                stroke-linejoin="round" style="margin-right: 4px; vertical-align: middle;">
+                                <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+                                <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+                            </svg>
                             Copy to Sheets
                         </button>
                     </div>
@@ -962,10 +1152,11 @@
                                 LEFT
                                 <select v-model="leftDrive">
                                     <option value="">-- Select Drive --</option>
-                                    <option v-for="drive in availableDrives" :key="drive" :value="drive">{{ drive }}</option>
+                                    <option v-for="drive in availableDrives" :key="drive" :value="drive">{{ drive }}
+                                    </option>
                                 </select>
                             </div>
-                            
+
                             <div v-if="leftSummary" class="compare-summary">
                                 <div class="compare-row">
                                     <span class="compare-label">Total Files:</span>
@@ -980,40 +1171,46 @@
                                     <span class="compare-value">{{ formatFileSize(leftSummary.total_file_size) }}</span>
                                 </div>
                             </div>
-                            
+
                             <div class="compare-dates">
-                                <div v-for="date in comparisonDates" :key="date" :class="['compare-date-card', (leftSummary && leftSummary.dates[date]) ? 'has-data' : 'no-data']">
+                                <div v-for="date in comparisonDates" :key="date"
+                                    :class="['compare-date-card', (leftSummary && leftSummary.dates[date]) ? 'has-data' : 'no-data']">
                                     <div class="compare-date-title">
                                         <span>{{ formatDisplayDate(date) }}</span>
-                                        <span v-if="leftSummary && leftSummary.dates[date]" style="font-size: 12px; color: #718096; font-weight: normal;">{{ leftSummary.dates[date].file_count }} files</span>
+                                        <span v-if="leftSummary && leftSummary.dates[date]"
+                                            style="font-size: 12px; color: #718096; font-weight: normal;">{{
+                                            leftSummary.dates[date].file_count }} files</span>
                                     </div>
                                     <div v-if="leftSummary && leftSummary.dates[date]" style="font-size: 13px;">
                                         <div style="display:flex; justify-content:space-between; margin-bottom: 4px;">
-                                            <span style="color:#718096">Size:</span> 
-                                            <strong>{{ formatFileSize(leftSummary.dates[date].total_file_size) }}</strong>
+                                            <span style="color:#718096">Size:</span>
+                                            <strong>{{ formatFileSize(leftSummary.dates[date].total_file_size)
+                                                }}</strong>
                                         </div>
                                         <div style="display:flex; justify-content:space-between;">
-                                            <span style="color:#718096">Duration:</span> 
+                                            <span style="color:#718096">Duration:</span>
                                             <strong>{{ leftSummary.dates[date].total_duration_formatted }}</strong>
                                         </div>
                                     </div>
-                                    <div v-else style="font-size: 13px; color: #a0aec0; text-align: center; padding: 10px 0;">
+                                    <div v-else
+                                        style="font-size: 13px; color: #a0aec0; text-align: center; padding: 10px 0;">
                                         No files on this date
                                     </div>
                                 </div>
                             </div>
                         </div>
-                        
+
                         <!-- Right Column -->
                         <div class="compare-col">
                             <div class="compare-header">
                                 RIGHT
                                 <select v-model="rightDrive">
                                     <option value="">-- Select Drive --</option>
-                                    <option v-for="drive in availableDrives" :key="drive" :value="drive">{{ drive }}</option>
+                                    <option v-for="drive in availableDrives" :key="drive" :value="drive">{{ drive }}
+                                    </option>
                                 </select>
                             </div>
-                            
+
                             <div v-if="rightSummary" class="compare-summary">
                                 <div class="compare-row">
                                     <span class="compare-label">Total Files:</span>
@@ -1025,27 +1222,33 @@
                                 </div>
                                 <div class="compare-row">
                                     <span class="compare-label">Total Size:</span>
-                                    <span class="compare-value">{{ formatFileSize(rightSummary.total_file_size) }}</span>
+                                    <span class="compare-value">{{ formatFileSize(rightSummary.total_file_size)
+                                        }}</span>
                                 </div>
                             </div>
-                            
+
                             <div class="compare-dates">
-                                <div v-for="date in comparisonDates" :key="date" :class="['compare-date-card', (rightSummary && rightSummary.dates[date]) ? 'has-data' : 'no-data']">
+                                <div v-for="date in comparisonDates" :key="date"
+                                    :class="['compare-date-card', (rightSummary && rightSummary.dates[date]) ? 'has-data' : 'no-data']">
                                     <div class="compare-date-title">
                                         <span>{{ formatDisplayDate(date) }}</span>
-                                        <span v-if="rightSummary && rightSummary.dates[date]" style="font-size: 12px; color: #718096; font-weight: normal;">{{ rightSummary.dates[date].file_count }} files</span>
+                                        <span v-if="rightSummary && rightSummary.dates[date]"
+                                            style="font-size: 12px; color: #718096; font-weight: normal;">{{
+                                            rightSummary.dates[date].file_count }} files</span>
                                     </div>
                                     <div v-if="rightSummary && rightSummary.dates[date]" style="font-size: 13px;">
                                         <div style="display:flex; justify-content:space-between; margin-bottom: 4px;">
-                                            <span style="color:#718096">Size:</span> 
-                                            <strong>{{ formatFileSize(rightSummary.dates[date].total_file_size) }}</strong>
+                                            <span style="color:#718096">Size:</span>
+                                            <strong>{{ formatFileSize(rightSummary.dates[date].total_file_size)
+                                                }}</strong>
                                         </div>
                                         <div style="display:flex; justify-content:space-between;">
-                                            <span style="color:#718096">Duration:</span> 
+                                            <span style="color:#718096">Duration:</span>
                                             <strong>{{ rightSummary.dates[date].total_duration_formatted }}</strong>
                                         </div>
                                     </div>
-                                    <div v-else style="font-size: 13px; color: #a0aec0; text-align: center; padding: 10px 0;">
+                                    <div v-else
+                                        style="font-size: 13px; color: #a0aec0; text-align: center; padding: 10px 0;">
                                         No files on this date
                                     </div>
                                 </div>
@@ -1077,7 +1280,12 @@
                         <button class="btn-secondary" @click="closeModal">Batal</button>
                         <button class="btn-clear" @click="executeModalAction">Ya, Hapus</button>
                         <button v-if="modalSecondaryAction" class="btn-clear-scan" @click="executeModalSecondaryAction">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24"
+                                fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                stroke-linejoin="round">
+                                <circle cx="11" cy="11" r="8" />
+                                <path d="m21 21-4.3-4.3" />
+                            </svg>
                             Hapus &amp; Scan
                         </button>
                     </div>
@@ -1138,7 +1346,7 @@
                 allExpanded() {
                     const drives = Object.keys(this.grouped);
                     if (drives.length === 0) return false;
-                    
+
                     return drives.every(driveName => {
                         if (!this.expandedDrives.includes(driveName)) return false;
                         const dates = Object.keys(this.grouped[driveName].dates);
@@ -1154,13 +1362,13 @@
                         this.metadata = data.metadata || [];
                         this.backlog = data.backlog || {};
                         this.grouped = data.grouped || {};
-                        
+
                         // Expand the first drive and its first date by default
                         const driveNames = Object.keys(this.grouped);
                         if (driveNames.length > 0 && this.expandedDrives.length === 0) {
                             const firstDrive = driveNames[0];
                             this.expandedDrives.push(firstDrive);
-                            
+
                             const dates = Object.keys(this.grouped[firstDrive].dates);
                             if (dates.length > 0) {
                                 this.expandedDates.push(`${firstDrive}|${dates[0]}`);
@@ -1195,12 +1403,12 @@
                         if (data.status === 'success') {
                             this.metadata = data.data.metadata || [];
                             this.backlog = data.data.backlog || {};
-                            
+
                             // Get updated grouped data
                             const dataResponse = await fetch('/api/data');
                             const updatedData = await dataResponse.json();
                             this.grouped = updatedData.grouped || {};
-                            
+
                             this.showStatus('Scan completed successfully', 'success');
                         } else {
                             this.showStatus(`Error: ${data.message}`, 'error');
@@ -1248,7 +1456,7 @@
                 },
                 async clearData() {
                     this.confirmAction(
-                        'Hapus Semua Data?', 
+                        'Hapus Semua Data?',
                         'Apakah Anda yakin ingin menghapus semua data rekaman? Tindakan ini tidak dapat dibatalkan.',
                         async () => {
                             await this.doClear();
@@ -1323,41 +1531,41 @@
                     if (!driveObj || !driveObj.dates) return;
 
                     let rowCells = [];
-                    
+
                     // Add total file size as the first column
                     rowCells.push(this.formatFileSize(driveObj.total_file_size || 0));
 
                     if (driveObj.camera_id) {
                         rowCells.push(driveObj.camera_id);
                     }
-                    
+
                     // Clean the camera ID from the drive name
                     let cleanDriveName = driveName.replace(/\s*\([^)]*\)$/, '');
                     rowCells.push(cleanDriveName);
-                    
+
                     const dates = Object.keys(driveObj.dates);
                     dates.forEach((dateStr) => {
                         const dateGroup = driveObj.dates[dateStr];
                         rowCells.push(dateStr);
-                        rowCells.push("");
                         rowCells.push(dateGroup.file_count);
                         rowCells.push(dateGroup.total_duration_formatted);
-                        
+
                         // Total decimal duration (e.g. 1,5 for 1.5 hours)
                         const hours = (dateGroup.total_duration_seconds || 0) / 3600;
                         const decimalHours = parseFloat(hours.toFixed(2)).toString().replace('.', ',');
                         rowCells.push(decimalHours);
+                        rowCells.push("");
                     });
-                    
+
                     const tsvContent = rowCells.join("\t");
-                    
+
                     const el = document.createElement('textarea');
                     el.value = tsvContent;
                     document.body.appendChild(el);
                     el.select();
                     document.execCommand('copy');
                     document.body.removeChild(el);
-                    
+
                     this.toastMessage = `Copied ${driveName} data for Google Sheets!`;
                     setTimeout(() => {
                         this.toastMessage = '';
@@ -1428,7 +1636,7 @@
 
                         const leftGb = getGbStr(leftSize);
                         const rightGb = getGbStr(rightSize);
-                        
+
                         const row = [
                             date,
                             leftDriveName,
@@ -1445,16 +1653,16 @@
 
                         lines.push(row.join("\t"));
                     });
-                    
+
                     const tsvContent = lines.join("\n");
-                    
+
                     const el = document.createElement('textarea');
                     el.value = tsvContent;
                     document.body.appendChild(el);
                     el.select();
                     document.execCommand('copy');
                     document.body.removeChild(el);
-                    
+
                     this.toastMessage = `Copied comparison to Google Sheets!`;
                     setTimeout(() => {
                         this.toastMessage = '';
@@ -1462,14 +1670,14 @@
                 },
                 copyToClipboard(text) {
                     if (!text && text !== 0) return;
-                    
+
                     const el = document.createElement('textarea');
                     el.value = text.toString();
                     document.body.appendChild(el);
                     el.select();
                     document.execCommand('copy');
                     document.body.removeChild(el);
-                    
+
                     this.toastMessage = `Copied: ${text}`;
                     setTimeout(() => {
                         this.toastMessage = '';
@@ -1479,10 +1687,10 @@
                     if (!dateString) return '';
                     try {
                         const date = new Date(dateString);
-                        return date.toLocaleString('id-ID', { 
-                            weekday: 'long', 
-                            day: 'numeric', 
-                            month: 'long', 
+                        return date.toLocaleString('id-ID', {
+                            weekday: 'long',
+                            day: 'numeric',
+                            month: 'long',
                             year: 'numeric',
                             hour: '2-digit',
                             minute: '2-digit',
@@ -1519,17 +1727,17 @@
 
                     if (seconds < 30) return 'Baru saja';
                     if (seconds < 60) return 'Kurang dari semenit lalu';
-                    
+
                     const minutes = Math.floor(seconds / 60);
                     if (minutes < 60) return `${minutes} menit yang lalu`;
-                    
+
                     const hours = Math.floor(minutes / 60);
                     if (hours < 24) return `${hours} jam yang lalu`;
-                    
+
                     const days = Math.floor(hours / 24);
                     if (days === 1) return 'Kemarin';
                     if (days < 7) return `${days} hari yang lalu`;
-                    
+
                     return date.toLocaleString();
                 },
                 confirmAction(title, message, action, secondaryAction) {
@@ -1563,7 +1771,7 @@
                 setInterval(() => {
                     this.currentTime = new Date();
                 }, 30000);
-                
+
                 // Auto-refresh data every 5 seconds to catch background USB scans
                 setInterval(() => {
                     if (!this.isLoading) {
@@ -1574,4 +1782,5 @@
         }).mount('#app');
     </script>
 </body>
+
 </html>
