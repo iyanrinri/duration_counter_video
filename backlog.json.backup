@@ -1,41 +1,780 @@
 {
-  "total_files": 3,
-  "total_duration_seconds": 7413.886,
-  "total_file_size": 24029410817,
+  "total_files": 77,
+  "total_duration_seconds": 198368.86700200007,
+  "total_file_size": 639248392089,
   "files": [
     {
-      "timestamp": "2026-06-17T14:09:51.297644",
-      "recorded_date": "2026-06-09",
-      "file_path": "G:\\recording\\atlascm2780\\2026-06-09\\0001_1780982919\\recording.mp4",
-      "drive_name": "07H-6061213",
-      "md5_first_1mb": "5b8fcade22689475331d054b22dd25a9",
-      "duration_seconds": 1891.039,
-      "file_size": 6148041558,
-      "camera_id": "atlascm2780"
+      "timestamp": "2026-06-14T23:30:10.379467",
+      "recorded_date": "2026-06-14",
+      "file_path": "/media/minipc/03a-NEW/recording/atlascm3433/2026-06-14/0001_1781420510/recording.mp4",
+      "drive_name": "03a-NEW",
+      "md5_first_1mb": "d41d8cd98f00b204e9800998ecf8427e",
+      "duration_seconds": null,
+      "file_size": 0,
+      "camera_id": "atlascm3433"
     },
     {
-      "timestamp": "2026-06-17T14:09:51.298328",
-      "recorded_date": "2026-06-09",
-      "file_path": "G:\\recording\\atlascm2780\\2026-06-09\\0001_1780982919\\recording.mp4",
-      "drive_name": "07H-6061213",
-      "md5_first_1mb": "5b8fcade22689475331d054b22dd25a9",
-      "duration_seconds": 1891.039,
-      "file_size": 6148041558,
-      "camera_id": "atlascm2780"
+      "timestamp": "2026-06-14T23:30:10.455846",
+      "recorded_date": "2026-06-14",
+      "file_path": "/media/minipc/03a-NEW/recording/atlascm3433/2026-06-14/0002_1781420520/recording.mp4",
+      "drive_name": "03a-NEW",
+      "md5_first_1mb": "d04896b324646e547e22223ddf80d14d",
+      "duration_seconds": 1290.72,
+      "file_size": 4203522499,
+      "camera_id": "atlascm3433"
     },
     {
-      "timestamp": "2026-06-17T14:09:51.509113",
+      "timestamp": "2026-06-14T23:30:10.536219",
+      "recorded_date": "2026-06-14",
+      "file_path": "/media/minipc/03a-NEW/recording/atlascm3433/2026-06-14/0003_1781422114/recording.mp4",
+      "drive_name": "03a-NEW",
+      "md5_first_1mb": "f56e3cd3e2c1720810372b18890e4997",
+      "duration_seconds": 1830.848,
+      "file_size": 5888599525,
+      "camera_id": "atlascm3433"
+    },
+    {
+      "timestamp": "2026-06-14T23:30:10.606447",
+      "recorded_date": "2026-06-14",
+      "file_path": "/media/minipc/03a-NEW/recording/atlascm3433/2026-06-14/0004_1781425628/recording.mp4",
+      "drive_name": "03a-NEW",
+      "md5_first_1mb": "d9b54dc5daeb1ddf16c94587fa3efe43",
+      "duration_seconds": 210.112,
+      "file_size": 775082180,
+      "camera_id": "atlascm3433"
+    },
+    {
+      "timestamp": "2026-06-14T23:30:10.687665",
+      "recorded_date": "2026-06-14",
+      "file_path": "/media/minipc/03a-NEW/recording/atlascm3433/2026-06-14/0005_1781425993/recording.mp4",
+      "drive_name": "03a-NEW",
+      "md5_first_1mb": "fb2d8179c856da0caff910acd34b61c5",
+      "duration_seconds": 1800.917333,
+      "file_size": 5821481076,
+      "camera_id": "atlascm3433"
+    },
+    {
+      "timestamp": "2026-06-14T23:30:10.806597",
+      "recorded_date": "2026-06-12",
+      "file_path": "/media/minipc/013-6061112/recording/atlascm3483/2026-06-12/0001_1781250300/recording.mp4",
+      "drive_name": "013-6061112",
+      "md5_first_1mb": "f2102074e8d9625212d753bd857d15da",
+      "duration_seconds": 1860.973333,
+      "file_size": 5987657344,
+      "camera_id": "atlascm3483"
+    },
+    {
+      "timestamp": "2026-06-14T23:30:10.889083",
+      "recorded_date": "2026-06-12",
+      "file_path": "/media/minipc/013-6061112/recording/atlascm3483/2026-06-12/0002_1781252428/recording.mp4",
+      "drive_name": "013-6061112",
+      "md5_first_1mb": "fc48db6fbfd89f8350fb7907d1386cc5",
+      "duration_seconds": 1891.068,
+      "file_size": 6069528306,
+      "camera_id": "atlascm3483"
+    },
+    {
+      "timestamp": "2026-06-14T23:30:10.961224",
+      "recorded_date": "2026-06-12",
+      "file_path": "/media/minipc/013-6061112/recording/atlascm3483/2026-06-12/0003_1781254593/recording.mp4",
+      "drive_name": "013-6061112",
+      "md5_first_1mb": "64022e249c0b5cb497e599831cbd881a",
+      "duration_seconds": 750.476,
+      "file_size": 2415187943,
+      "camera_id": "atlascm3483"
+    },
+    {
+      "timestamp": "2026-06-15T00:38:05.009898",
       "recorded_date": "2026-06-09",
-      "file_path": "G:\\recording\\atlascm2780\\2026-06-09\\0002_1780982919\\recording.mp4",
-      "drive_name": "07H-6061213",
-      "md5_first_1mb": "1d3732bc0e97935592fc980745409c8b",
-      "duration_seconds": 3631.808,
-      "file_size": 11733327701,
-      "camera_id": "atlascm2780"
+      "file_path": "/media/minipc/SFC-BDG-8/recording/atlascm3253/2026-06-09/0001_1781014384/recording.mp4",
+      "drive_name": "SFC-BDG-8",
+      "md5_first_1mb": "c26236b71e1e29a5d26334c06dcfed8d",
+      "duration_seconds": 3661.917,
+      "file_size": 11849882425,
+      "camera_id": "atlascm3253"
+    },
+    {
+      "timestamp": "2026-06-15T00:38:05.111458",
+      "recorded_date": "2026-06-09",
+      "file_path": "/media/minipc/SFC-BDG-8/recording/atlascm3253/2026-06-09/0001_1781014384/recording.mp4",
+      "drive_name": "SFC-BDG-8",
+      "md5_first_1mb": "c26236b71e1e29a5d26334c06dcfed8d",
+      "duration_seconds": 3661.917,
+      "file_size": 11849882425,
+      "camera_id": "atlascm3253"
+    },
+    {
+      "timestamp": "2026-06-15T00:38:05.201927",
+      "recorded_date": "2026-06-09",
+      "file_path": "/media/minipc/SFC-BDG-8/recording/atlascm3253/2026-06-09/0002_1781019375/recording.mp4",
+      "drive_name": "SFC-BDG-8",
+      "md5_first_1mb": "38849e83eca98201fb14b3d30e4b708a",
+      "duration_seconds": 3601.695,
+      "file_size": 11600142793,
+      "camera_id": "atlascm3253"
+    },
+    {
+      "timestamp": "2026-06-15T00:38:05.214777",
+      "recorded_date": "2026-06-09",
+      "file_path": "/media/minipc/SFC-BDG-8/recording/atlascm3253/2026-06-09/0002_1781019375/recording.mp4",
+      "drive_name": "SFC-BDG-8",
+      "md5_first_1mb": "38849e83eca98201fb14b3d30e4b708a",
+      "duration_seconds": 3601.695,
+      "file_size": 11600142793,
+      "camera_id": "atlascm3253"
+    },
+    {
+      "timestamp": "2026-06-15T02:49:24.965478",
+      "recorded_date": "2026-06-05",
+      "file_path": "/media/minipc/RBN-091/recording/atlascm3047/2026-06-05/0001_1780618680/recording.mp4",
+      "drive_name": "RBN-091",
+      "md5_first_1mb": "134e318472d13a0d0397d80da262c535",
+      "duration_seconds": 3391.625,
+      "file_size": 10994442355,
+      "camera_id": "atlascm3047"
+    },
+    {
+      "timestamp": "2026-06-15T02:49:24.966463",
+      "recorded_date": "2026-06-05",
+      "file_path": "/media/minipc/RBN-091/recording/atlascm3047/2026-06-05/0001_1780618680/recording.mp4",
+      "drive_name": "RBN-091",
+      "md5_first_1mb": "134e318472d13a0d0397d80da262c535",
+      "duration_seconds": 3391.625,
+      "file_size": 10994442355,
+      "camera_id": "atlascm3047"
+    },
+    {
+      "timestamp": "2026-06-15T02:49:25.059048",
+      "recorded_date": "2026-06-11",
+      "file_path": "/media/minipc/RBN-091/recording/atlascm3047/2026-06-11/0001_1781181352/recording.mp4",
+      "drive_name": "RBN-091",
+      "md5_first_1mb": "79f7af259d6a348322b0ac84981ae1e7",
+      "duration_seconds": 0.021333,
+      "file_size": 29457130,
+      "camera_id": "atlascm3047"
+    },
+    {
+      "timestamp": "2026-06-15T02:49:25.203439",
+      "recorded_date": "2026-06-11",
+      "file_path": "/media/minipc/RBN-091/recording/atlascm3047/2026-06-11/0002_1781181412/recording.mp4",
+      "drive_name": "RBN-091",
+      "md5_first_1mb": "ec6cd3eaee95987882dce4929d74831f",
+      "duration_seconds": 3736.411333,
+      "file_size": 12003832940,
+      "camera_id": "atlascm3047"
+    },
+    {
+      "timestamp": "2026-06-15T02:49:25.351734",
+      "recorded_date": "2026-06-11",
+      "file_path": "/media/minipc/RBN-091/recording/atlascm3047/2026-06-11/0003_1781185155/recording.mp4",
+      "drive_name": "RBN-091",
+      "md5_first_1mb": "f338abbae368e5ffb7f3476549edc072",
+      "duration_seconds": 1740.778667,
+      "file_size": 5647770275,
+      "camera_id": "atlascm3047"
+    },
+    {
+      "timestamp": "2026-06-15T02:49:25.358411",
+      "recorded_date": "2026-06-11",
+      "file_path": "/media/minipc/RBN-091/recording/atlascm3047/2026-06-11/0003_1781185155/recording.mp4",
+      "drive_name": "RBN-091",
+      "md5_first_1mb": "f338abbae368e5ffb7f3476549edc072",
+      "duration_seconds": 1740.778667,
+      "file_size": 5647770275,
+      "camera_id": "atlascm3047"
+    },
+    {
+      "timestamp": "2026-06-15T02:49:25.491986",
+      "recorded_date": "2026-06-12",
+      "file_path": "/media/minipc/RBN-091/recording/atlascm3047/2026-06-12/0001_1781268887/recording.mp4",
+      "drive_name": "RBN-091",
+      "md5_first_1mb": "1422aec19988f14de16f2d9eafd82cb6",
+      "duration_seconds": 690.368,
+      "file_size": 2257960576,
+      "camera_id": "atlascm3047"
+    },
+    {
+      "timestamp": "2026-06-15T02:49:25.492903",
+      "recorded_date": "2026-06-12",
+      "file_path": "/media/minipc/RBN-091/recording/atlascm3047/2026-06-12/0001_1781268887/recording.mp4",
+      "drive_name": "RBN-091",
+      "md5_first_1mb": "1422aec19988f14de16f2d9eafd82cb6",
+      "duration_seconds": 690.368,
+      "file_size": 2257960576,
+      "camera_id": "atlascm3047"
+    },
+    {
+      "timestamp": "2026-06-15T02:49:25.659919",
+      "recorded_date": "2026-06-12",
+      "file_path": "/media/minipc/RBN-091/recording/atlascm3047/2026-06-12/0002_1781269613/recording.mp4",
+      "drive_name": "RBN-091",
+      "md5_first_1mb": "7274a110c3c031d63c99e4ce307d2255",
+      "duration_seconds": 2941.525333,
+      "file_size": 9447239595,
+      "camera_id": "atlascm3047"
+    },
+    {
+      "timestamp": "2026-06-15T02:49:25.823834",
+      "recorded_date": "2026-06-13",
+      "file_path": "/media/minipc/RBN-091/recording/atlascm3047/2026-06-13/0001_1781323708/recording.mp4",
+      "drive_name": "RBN-091",
+      "md5_first_1mb": "a895ca8e472fb05093f101a164a82bce",
+      "duration_seconds": 3121.594,
+      "file_size": 10071678275,
+      "camera_id": "atlascm3047"
+    },
+    {
+      "timestamp": "2026-06-15T02:49:25.830126",
+      "recorded_date": "2026-06-13",
+      "file_path": "/media/minipc/RBN-091/recording/atlascm3047/2026-06-13/0001_1781323708/recording.mp4",
+      "drive_name": "RBN-091",
+      "md5_first_1mb": "a895ca8e472fb05093f101a164a82bce",
+      "duration_seconds": 3121.594,
+      "file_size": 10071678275,
+      "camera_id": "atlascm3047"
+    },
+    {
+      "timestamp": "2026-06-15T02:49:25.925349",
+      "recorded_date": "2026-06-13",
+      "file_path": "/media/minipc/RBN-091/recording/atlascm3047/2026-06-13/0002_1781327489/recording.mp4",
+      "drive_name": "RBN-091",
+      "md5_first_1mb": "5e75025c9ec8b13bd04fd73988f7bb50",
+      "duration_seconds": 0.021333,
+      "file_size": 71726603,
+      "camera_id": "atlascm3047"
+    },
+    {
+      "timestamp": "2026-06-15T02:49:25.981922",
+      "recorded_date": "2026-06-13",
+      "file_path": "/media/minipc/RBN-091/recording/atlascm3047/2026-06-13/0003_1781327569/recording.mp4",
+      "drive_name": "RBN-091",
+      "md5_first_1mb": "d41d8cd98f00b204e9800998ecf8427e",
+      "duration_seconds": null,
+      "file_size": 0,
+      "camera_id": "atlascm3047"
+    },
+    {
+      "timestamp": "2026-06-15T02:49:25.984047",
+      "recorded_date": "2026-06-13",
+      "file_path": "/media/minipc/RBN-091/recording/atlascm3047/2026-06-13/0003_1781327569/recording.mp4",
+      "drive_name": "RBN-091",
+      "md5_first_1mb": "d41d8cd98f00b204e9800998ecf8427e",
+      "duration_seconds": null,
+      "file_size": 0,
+      "camera_id": "atlascm3047"
+    },
+    {
+      "timestamp": "2026-06-15T02:49:26.153018",
+      "recorded_date": "2026-06-13",
+      "file_path": "/media/minipc/RBN-091/recording/atlascm3047/2026-06-13/0004_1781327579/recording.mp4",
+      "drive_name": "RBN-091",
+      "md5_first_1mb": "0e898dc95ae65805636f65e899da58d3",
+      "duration_seconds": 3733.766667,
+      "file_size": 12005532646,
+      "camera_id": "atlascm3047"
+    },
+    {
+      "timestamp": "2026-06-15T02:49:26.154882",
+      "recorded_date": "2026-06-13",
+      "file_path": "/media/minipc/RBN-091/recording/atlascm3047/2026-06-13/0004_1781327579/recording.mp4",
+      "drive_name": "RBN-091",
+      "md5_first_1mb": "0e898dc95ae65805636f65e899da58d3",
+      "duration_seconds": 3733.766667,
+      "file_size": 12005532646,
+      "camera_id": "atlascm3047"
+    },
+    {
+      "timestamp": "2026-06-15T02:49:26.307680",
+      "recorded_date": "2026-06-13",
+      "file_path": "/media/minipc/RBN-091/recording/atlascm3047/2026-06-13/0005_1781331319/recording.mp4",
+      "drive_name": "RBN-091",
+      "md5_first_1mb": "52785a1e4d66a27a66568f840159abf1",
+      "duration_seconds": 3733.952,
+      "file_size": 12003389906,
+      "camera_id": "atlascm3047"
+    },
+    {
+      "timestamp": "2026-06-15T02:49:26.308616",
+      "recorded_date": "2026-06-13",
+      "file_path": "/media/minipc/RBN-091/recording/atlascm3047/2026-06-13/0005_1781331319/recording.mp4",
+      "drive_name": "RBN-091",
+      "md5_first_1mb": "52785a1e4d66a27a66568f840159abf1",
+      "duration_seconds": 3733.952,
+      "file_size": 12003389906,
+      "camera_id": "atlascm3047"
+    },
+    {
+      "timestamp": "2026-06-15T02:49:26.453836",
+      "recorded_date": "2026-06-13",
+      "file_path": "/media/minipc/RBN-091/recording/atlascm3047/2026-06-13/0006_1781335060/recording.mp4",
+      "drive_name": "RBN-091",
+      "md5_first_1mb": "537704519568855ac2a1bc1342fe1dc1",
+      "duration_seconds": 3734.037667,
+      "file_size": 12002434893,
+      "camera_id": "atlascm3047"
+    },
+    {
+      "timestamp": "2026-06-15T02:49:26.454827",
+      "recorded_date": "2026-06-13",
+      "file_path": "/media/minipc/RBN-091/recording/atlascm3047/2026-06-13/0006_1781335060/recording.mp4",
+      "drive_name": "RBN-091",
+      "md5_first_1mb": "537704519568855ac2a1bc1342fe1dc1",
+      "duration_seconds": 3734.037667,
+      "file_size": 12002434893,
+      "camera_id": "atlascm3047"
+    },
+    {
+      "timestamp": "2026-06-15T02:49:26.598640",
+      "recorded_date": "2026-06-13",
+      "file_path": "/media/minipc/RBN-091/recording/atlascm3047/2026-06-13/0007_1781338801/recording.mp4",
+      "drive_name": "RBN-091",
+      "md5_first_1mb": "a699efed2f6477df5b46cc628f5089be",
+      "duration_seconds": 3732.565333,
+      "file_size": 12001070694,
+      "camera_id": "atlascm3047"
+    },
+    {
+      "timestamp": "2026-06-15T02:49:26.741354",
+      "recorded_date": "2026-06-13",
+      "file_path": "/media/minipc/RBN-091/recording/atlascm3047/2026-06-13/0008_1781342540/recording.mp4",
+      "drive_name": "RBN-091",
+      "md5_first_1mb": "e32e31233750564060752b6af4097d96",
+      "duration_seconds": 2341.12,
+      "file_size": 7558323347,
+      "camera_id": "atlascm3047"
+    },
+    {
+      "timestamp": "2026-06-15T02:55:26.098935",
+      "recorded_date": "2026-06-05",
+      "file_path": "/media/minipc/RBN-091/recording/atlascm3047/2026-06-05/0001_1780618680/recording.mp4",
+      "drive_name": "RBN-091",
+      "md5_first_1mb": "134e318472d13a0d0397d80da262c535",
+      "duration_seconds": 3391.625,
+      "file_size": 10994442355,
+      "camera_id": "atlascm3047"
+    },
+    {
+      "timestamp": "2026-06-15T02:55:26.122157",
+      "recorded_date": "2026-06-05",
+      "file_path": "/media/minipc/RBN-091/recording/atlascm3047/2026-06-05/0001_1780618680/recording.mp4",
+      "drive_name": "RBN-091",
+      "md5_first_1mb": "134e318472d13a0d0397d80da262c535",
+      "duration_seconds": 3391.625,
+      "file_size": 10994442355,
+      "camera_id": "atlascm3047"
+    },
+    {
+      "timestamp": "2026-06-15T02:55:26.303870",
+      "recorded_date": "2026-06-11",
+      "file_path": "/media/minipc/RBN-091/recording/atlascm3047/2026-06-11/0001_1781181352/recording.mp4",
+      "drive_name": "RBN-091",
+      "md5_first_1mb": "79f7af259d6a348322b0ac84981ae1e7",
+      "duration_seconds": 0.021333,
+      "file_size": 29457130,
+      "camera_id": "atlascm3047"
+    },
+    {
+      "timestamp": "2026-06-15T02:55:26.317989",
+      "recorded_date": "2026-06-11",
+      "file_path": "/media/minipc/RBN-091/recording/atlascm3047/2026-06-11/0001_1781181352/recording.mp4",
+      "drive_name": "RBN-091",
+      "md5_first_1mb": "79f7af259d6a348322b0ac84981ae1e7",
+      "duration_seconds": 0.021333,
+      "file_size": 29457130,
+      "camera_id": "atlascm3047"
+    },
+    {
+      "timestamp": "2026-06-15T02:55:26.640852",
+      "recorded_date": "2026-06-11",
+      "file_path": "/media/minipc/RBN-091/recording/atlascm3047/2026-06-11/0002_1781181412/recording.mp4",
+      "drive_name": "RBN-091",
+      "md5_first_1mb": "ec6cd3eaee95987882dce4929d74831f",
+      "duration_seconds": 3736.411333,
+      "file_size": 12003832940,
+      "camera_id": "atlascm3047"
+    },
+    {
+      "timestamp": "2026-06-15T02:55:27.023469",
+      "recorded_date": "2026-06-11",
+      "file_path": "/media/minipc/RBN-091/recording/atlascm3047/2026-06-11/0003_1781185155/recording.mp4",
+      "drive_name": "RBN-091",
+      "md5_first_1mb": "f338abbae368e5ffb7f3476549edc072",
+      "duration_seconds": 1740.778667,
+      "file_size": 5647770275,
+      "camera_id": "atlascm3047"
+    },
+    {
+      "timestamp": "2026-06-15T02:55:27.110109",
+      "recorded_date": "2026-06-11",
+      "file_path": "/media/minipc/RBN-091/recording/atlascm3047/2026-06-11/0003_1781185155/recording.mp4",
+      "drive_name": "RBN-091",
+      "md5_first_1mb": "f338abbae368e5ffb7f3476549edc072",
+      "duration_seconds": 1740.778667,
+      "file_size": 5647770275,
+      "camera_id": "atlascm3047"
+    },
+    {
+      "timestamp": "2026-06-15T02:55:27.312650",
+      "recorded_date": "2026-06-12",
+      "file_path": "/media/minipc/RBN-091/recording/atlascm3047/2026-06-12/0001_1781268887/recording.mp4",
+      "drive_name": "RBN-091",
+      "md5_first_1mb": "1422aec19988f14de16f2d9eafd82cb6",
+      "duration_seconds": 690.368,
+      "file_size": 2257960576,
+      "camera_id": "atlascm3047"
+    },
+    {
+      "timestamp": "2026-06-15T02:55:27.690669",
+      "recorded_date": "2026-06-12",
+      "file_path": "/media/minipc/RBN-091/recording/atlascm3047/2026-06-12/0002_1781269613/recording.mp4",
+      "drive_name": "RBN-091",
+      "md5_first_1mb": "7274a110c3c031d63c99e4ce307d2255",
+      "duration_seconds": 2941.525333,
+      "file_size": 9447239595,
+      "camera_id": "atlascm3047"
+    },
+    {
+      "timestamp": "2026-06-15T02:55:27.698112",
+      "recorded_date": "2026-06-12",
+      "file_path": "/media/minipc/RBN-091/recording/atlascm3047/2026-06-12/0002_1781269613/recording.mp4",
+      "drive_name": "RBN-091",
+      "md5_first_1mb": "7274a110c3c031d63c99e4ce307d2255",
+      "duration_seconds": 2941.525333,
+      "file_size": 9447239595,
+      "camera_id": "atlascm3047"
+    },
+    {
+      "timestamp": "2026-06-15T02:55:28.157815",
+      "recorded_date": "2026-06-13",
+      "file_path": "/media/minipc/RBN-091/recording/atlascm3047/2026-06-13/0001_1781323708/recording.mp4",
+      "drive_name": "RBN-091",
+      "md5_first_1mb": "a895ca8e472fb05093f101a164a82bce",
+      "duration_seconds": 3121.594,
+      "file_size": 10071678275,
+      "camera_id": "atlascm3047"
+    },
+    {
+      "timestamp": "2026-06-15T02:55:28.335256",
+      "recorded_date": "2026-06-13",
+      "file_path": "/media/minipc/RBN-091/recording/atlascm3047/2026-06-13/0002_1781327489/recording.mp4",
+      "drive_name": "RBN-091",
+      "md5_first_1mb": "5e75025c9ec8b13bd04fd73988f7bb50",
+      "duration_seconds": 0.021333,
+      "file_size": 71726603,
+      "camera_id": "atlascm3047"
+    },
+    {
+      "timestamp": "2026-06-15T02:55:28.391153",
+      "recorded_date": "2026-06-13",
+      "file_path": "/media/minipc/RBN-091/recording/atlascm3047/2026-06-13/0003_1781327569/recording.mp4",
+      "drive_name": "RBN-091",
+      "md5_first_1mb": "d41d8cd98f00b204e9800998ecf8427e",
+      "duration_seconds": null,
+      "file_size": 0,
+      "camera_id": "atlascm3047"
+    },
+    {
+      "timestamp": "2026-06-15T02:55:28.392018",
+      "recorded_date": "2026-06-13",
+      "file_path": "/media/minipc/RBN-091/recording/atlascm3047/2026-06-13/0003_1781327569/recording.mp4",
+      "drive_name": "RBN-091",
+      "md5_first_1mb": "d41d8cd98f00b204e9800998ecf8427e",
+      "duration_seconds": null,
+      "file_size": 0,
+      "camera_id": "atlascm3047"
+    },
+    {
+      "timestamp": "2026-06-15T02:55:28.809679",
+      "recorded_date": "2026-06-13",
+      "file_path": "/media/minipc/RBN-091/recording/atlascm3047/2026-06-13/0004_1781327579/recording.mp4",
+      "drive_name": "RBN-091",
+      "md5_first_1mb": "0e898dc95ae65805636f65e899da58d3",
+      "duration_seconds": 3733.766667,
+      "file_size": 12005532646,
+      "camera_id": "atlascm3047"
+    },
+    {
+      "timestamp": "2026-06-15T02:55:28.818202",
+      "recorded_date": "2026-06-13",
+      "file_path": "/media/minipc/RBN-091/recording/atlascm3047/2026-06-13/0004_1781327579/recording.mp4",
+      "drive_name": "RBN-091",
+      "md5_first_1mb": "0e898dc95ae65805636f65e899da58d3",
+      "duration_seconds": 3733.766667,
+      "file_size": 12005532646,
+      "camera_id": "atlascm3047"
+    },
+    {
+      "timestamp": "2026-06-15T02:55:29.192250",
+      "recorded_date": "2026-06-13",
+      "file_path": "/media/minipc/RBN-091/recording/atlascm3047/2026-06-13/0005_1781331319/recording.mp4",
+      "drive_name": "RBN-091",
+      "md5_first_1mb": "52785a1e4d66a27a66568f840159abf1",
+      "duration_seconds": 3733.952,
+      "file_size": 12003389906,
+      "camera_id": "atlascm3047"
+    },
+    {
+      "timestamp": "2026-06-15T02:55:29.571862",
+      "recorded_date": "2026-06-13",
+      "file_path": "/media/minipc/RBN-091/recording/atlascm3047/2026-06-13/0006_1781335060/recording.mp4",
+      "drive_name": "RBN-091",
+      "md5_first_1mb": "537704519568855ac2a1bc1342fe1dc1",
+      "duration_seconds": 3734.037667,
+      "file_size": 12002434893,
+      "camera_id": "atlascm3047"
+    },
+    {
+      "timestamp": "2026-06-15T02:55:29.595708",
+      "recorded_date": "2026-06-13",
+      "file_path": "/media/minipc/RBN-091/recording/atlascm3047/2026-06-13/0006_1781335060/recording.mp4",
+      "drive_name": "RBN-091",
+      "md5_first_1mb": "537704519568855ac2a1bc1342fe1dc1",
+      "duration_seconds": 3734.037667,
+      "file_size": 12002434893,
+      "camera_id": "atlascm3047"
+    },
+    {
+      "timestamp": "2026-06-15T02:55:29.902569",
+      "recorded_date": "2026-06-13",
+      "file_path": "/media/minipc/RBN-091/recording/atlascm3047/2026-06-13/0007_1781338801/recording.mp4",
+      "drive_name": "RBN-091",
+      "md5_first_1mb": "a699efed2f6477df5b46cc628f5089be",
+      "duration_seconds": 3732.565333,
+      "file_size": 12001070694,
+      "camera_id": "atlascm3047"
+    },
+    {
+      "timestamp": "2026-06-15T02:55:29.922333",
+      "recorded_date": "2026-06-13",
+      "file_path": "/media/minipc/RBN-091/recording/atlascm3047/2026-06-13/0007_1781338801/recording.mp4",
+      "drive_name": "RBN-091",
+      "md5_first_1mb": "a699efed2f6477df5b46cc628f5089be",
+      "duration_seconds": 3732.565333,
+      "file_size": 12001070694,
+      "camera_id": "atlascm3047"
+    },
+    {
+      "timestamp": "2026-06-15T02:55:30.253368",
+      "recorded_date": "2026-06-13",
+      "file_path": "/media/minipc/RBN-091/recording/atlascm3047/2026-06-13/0008_1781342540/recording.mp4",
+      "drive_name": "RBN-091",
+      "md5_first_1mb": "e32e31233750564060752b6af4097d96",
+      "duration_seconds": 2341.12,
+      "file_size": 7558323347,
+      "camera_id": "atlascm3047"
+    },
+    {
+      "timestamp": "2026-06-15T02:55:30.262856",
+      "recorded_date": "2026-06-13",
+      "file_path": "/media/minipc/RBN-091/recording/atlascm3047/2026-06-13/0008_1781342540/recording.mp4",
+      "drive_name": "RBN-091",
+      "md5_first_1mb": "e32e31233750564060752b6af4097d96",
+      "duration_seconds": 2341.12,
+      "file_size": 7558323347,
+      "camera_id": "atlascm3047"
+    },
+    {
+      "timestamp": "2026-06-15T02:55:30.761709",
+      "recorded_date": "2026-06-13",
+      "file_path": "/media/minipc/RBN-2/recording/atlascm3126/2026-06-13/0001_1781327845/recording.mp4",
+      "drive_name": "RBN-2",
+      "md5_first_1mb": "e3ac001896ec973e4446e614e8842a63",
+      "duration_seconds": 3734.339333,
+      "file_size": 12006197274,
+      "camera_id": "atlascm3126"
+    },
+    {
+      "timestamp": "2026-06-15T02:55:30.914833",
+      "recorded_date": "2026-06-13",
+      "file_path": "/media/minipc/RBN-2/recording/atlascm3126/2026-06-13/0002_1781331587/recording.mp4",
+      "drive_name": "RBN-2",
+      "md5_first_1mb": "b1faca0f209e1952d680965814d17d07",
+      "duration_seconds": 3736.971334,
+      "file_size": 12001881184,
+      "camera_id": "atlascm3126"
+    },
+    {
+      "timestamp": "2026-06-15T02:55:30.921311",
+      "recorded_date": "2026-06-13",
+      "file_path": "/media/minipc/RBN-2/recording/atlascm3126/2026-06-13/0002_1781331587/recording.mp4",
+      "drive_name": "RBN-2",
+      "md5_first_1mb": "b1faca0f209e1952d680965814d17d07",
+      "duration_seconds": 3736.971334,
+      "file_size": 12001881184,
+      "camera_id": "atlascm3126"
+    },
+    {
+      "timestamp": "2026-06-15T02:55:31.084118",
+      "recorded_date": "2026-06-13",
+      "file_path": "/media/minipc/RBN-2/recording/atlascm3126/2026-06-13/0003_1781335330/recording.mp4",
+      "drive_name": "RBN-2",
+      "md5_first_1mb": "15051ee42e7814237c7c27cdf8a5f2ba",
+      "duration_seconds": 3741.866667,
+      "file_size": 12006617811,
+      "camera_id": "atlascm3126"
+    },
+    {
+      "timestamp": "2026-06-15T02:55:31.087660",
+      "recorded_date": "2026-06-13",
+      "file_path": "/media/minipc/RBN-2/recording/atlascm3126/2026-06-13/0003_1781335330/recording.mp4",
+      "drive_name": "RBN-2",
+      "md5_first_1mb": "15051ee42e7814237c7c27cdf8a5f2ba",
+      "duration_seconds": 3741.866667,
+      "file_size": 12006617811,
+      "camera_id": "atlascm3126"
+    },
+    {
+      "timestamp": "2026-06-15T02:55:31.248988",
+      "recorded_date": "2026-06-13",
+      "file_path": "/media/minipc/RBN-2/recording/atlascm3126/2026-06-13/0004_1781339078/recording.mp4",
+      "drive_name": "RBN-2",
+      "md5_first_1mb": "fab1635e6c9123ef11699d9d2a83b2e9",
+      "duration_seconds": 3738.620334,
+      "file_size": 12006185157,
+      "camera_id": "atlascm3126"
+    },
+    {
+      "timestamp": "2026-06-15T02:55:31.251960",
+      "recorded_date": "2026-06-13",
+      "file_path": "/media/minipc/RBN-2/recording/atlascm3126/2026-06-13/0004_1781339078/recording.mp4",
+      "drive_name": "RBN-2",
+      "md5_first_1mb": "fab1635e6c9123ef11699d9d2a83b2e9",
+      "duration_seconds": 3738.620334,
+      "file_size": 12006185157,
+      "camera_id": "atlascm3126"
+    },
+    {
+      "timestamp": "2026-06-15T02:55:31.383994",
+      "recorded_date": "2026-06-13",
+      "file_path": "/media/minipc/RBN-2/recording/atlascm3126/2026-06-13/0005_1781342823/recording.mp4",
+      "drive_name": "RBN-2",
+      "md5_first_1mb": "5ec1f368507087e85d2f3c08d5dac073",
+      "duration_seconds": 2071.04,
+      "file_size": 6730790556,
+      "camera_id": "atlascm3126"
+    },
+    {
+      "timestamp": "2026-06-15T02:55:31.385617",
+      "recorded_date": "2026-06-13",
+      "file_path": "/media/minipc/RBN-2/recording/atlascm3126/2026-06-13/0005_1781342823/recording.mp4",
+      "drive_name": "RBN-2",
+      "md5_first_1mb": "5ec1f368507087e85d2f3c08d5dac073",
+      "duration_seconds": 2071.04,
+      "file_size": 6730790556,
+      "camera_id": "atlascm3126"
+    },
+    {
+      "timestamp": "2026-06-15T09:02:15.747889",
+      "recorded_date": "2026-06-11",
+      "file_path": "/media/minipc/0as-NEW/recording/atlascm3254/2026-06-11/0001_1781161789/recording.mp4",
+      "drive_name": "0as-NEW",
+      "md5_first_1mb": "0b2b23f493df73ff40306fc1cb19b645",
+      "duration_seconds": 120.298667,
+      "file_size": 63884100,
+      "camera_id": "atlascm3254"
+    },
+    {
+      "timestamp": "2026-06-15T09:02:15.904005",
+      "recorded_date": "2026-06-11",
+      "file_path": "/media/minipc/0as-NEW/recording/atlascm3254/2026-06-11/0002_1781180296/recording.mp4",
+      "drive_name": "0as-NEW",
+      "md5_first_1mb": "0479a500ca719db520d04f98c7bb4c93",
+      "duration_seconds": 3735.059,
+      "file_size": 12004591628,
+      "camera_id": "atlascm3254"
+    },
+    {
+      "timestamp": "2026-06-15T09:02:16.064744",
+      "recorded_date": "2026-06-11",
+      "file_path": "/media/minipc/0as-NEW/recording/atlascm3254/2026-06-11/0003_1781184039/recording.mp4",
+      "drive_name": "0as-NEW",
+      "md5_first_1mb": "20d13feb8026e12f09806e8cd51372e4",
+      "duration_seconds": 3481.706667,
+      "file_size": 11217666048,
+      "camera_id": "atlascm3254"
+    },
+    {
+      "timestamp": "2026-06-15T09:02:16.201722",
+      "recorded_date": "2026-06-11",
+      "file_path": "/media/minipc/0as-NEW/recording/atlascm3254/2026-06-11/0004_1781189312/recording.mp4",
+      "drive_name": "0as-NEW",
+      "md5_first_1mb": "cfde8bc5de3302868683cd2348734b82",
+      "duration_seconds": 3631.839,
+      "file_size": 11680088064,
+      "camera_id": "atlascm3254"
+    },
+    {
+      "timestamp": "2026-06-15T09:02:16.337526",
+      "recorded_date": "2026-06-12",
+      "file_path": "/media/minipc/0as-NEW/recording/atlascm3254/2026-06-12/0001_1781223321/recording.mp4",
+      "drive_name": "0as-NEW",
+      "md5_first_1mb": "cda45685d7d87f210bb8386a28aa4a3e",
+      "duration_seconds": 3728.515667,
+      "file_size": 12003856207,
+      "camera_id": "atlascm3254"
+    },
+    {
+      "timestamp": "2026-06-15T09:02:16.481515",
+      "recorded_date": "2026-06-12",
+      "file_path": "/media/minipc/0as-NEW/recording/atlascm3254/2026-06-12/0002_1781227057/recording.mp4",
+      "drive_name": "0as-NEW",
+      "md5_first_1mb": "2440c944a46877e55e83e89277e71484",
+      "duration_seconds": 3481.728,
+      "file_size": 11277697024,
+      "camera_id": "atlascm3254"
+    },
+    {
+      "timestamp": "2026-06-15T09:02:16.637741",
+      "recorded_date": "2026-06-12",
+      "file_path": "/media/minipc/0as-NEW/recording/atlascm3254/2026-06-12/0003_1781254458/recording.mp4",
+      "drive_name": "0as-NEW",
+      "md5_first_1mb": "10facf1613a2b7046f79ad29af53e34f",
+      "duration_seconds": 3631.779333,
+      "file_size": 11736973312,
+      "camera_id": "atlascm3254"
+    },
+    {
+      "timestamp": "2026-06-15T09:02:16.767831",
+      "recorded_date": "2026-06-12",
+      "file_path": "/media/minipc/0as-NEW/recording/atlascm3254/2026-06-12/0004_1781265056/recording.mp4",
+      "drive_name": "0as-NEW",
+      "md5_first_1mb": "9d5fb4dcdbc83d399b9b7f418e13f8fb",
+      "duration_seconds": 3631.786667,
+      "file_size": 11724390400,
+      "camera_id": "atlascm3254"
+    },
+    {
+      "timestamp": "2026-06-15T09:02:16.769924",
+      "recorded_date": "2026-06-12",
+      "file_path": "/media/minipc/0as-NEW/recording/atlascm3254/2026-06-12/0004_1781265056/recording.mp4",
+      "drive_name": "0as-NEW",
+      "md5_first_1mb": "9d5fb4dcdbc83d399b9b7f418e13f8fb",
+      "duration_seconds": 3631.786667,
+      "file_size": 11724390400,
+      "camera_id": "atlascm3254"
+    },
+    {
+      "timestamp": "2026-06-15T09:02:16.899070",
+      "recorded_date": "2026-06-12",
+      "file_path": "/media/minipc/0as-NEW/recording/atlascm3254/2026-06-12/0005_1781271883/recording.mp4",
+      "drive_name": "0as-NEW",
+      "md5_first_1mb": "1815beeae883c0bc70b4132221d10979",
+      "duration_seconds": 3631.778666,
+      "file_size": 11698700288,
+      "camera_id": "atlascm3254"
+    },
+    {
+      "timestamp": "2026-06-15T09:02:16.900385",
+      "recorded_date": "2026-06-12",
+      "file_path": "/media/minipc/0as-NEW/recording/atlascm3254/2026-06-12/0005_1781271883/recording.mp4",
+      "drive_name": "0as-NEW",
+      "md5_first_1mb": "1815beeae883c0bc70b4132221d10979",
+      "duration_seconds": 3631.778666,
+      "file_size": 11698700288,
+      "camera_id": "atlascm3254"
     }
   ],
-  "last_updated": "2026-06-17T14:09:51.522694",
-  "total_duration_formatted": "2h 3m 33s",
-  "total_file_size_mb": 22916.23
-}3
+  "last_updated": "2026-06-15T09:02:16.900823",
+  "total_duration_formatted": "55 Jam 6 Menit",
+  "total_file_size_mb": 609634.77
 }

@@ -31,7 +31,7 @@ DB_FILE = "database.sqlite"
 CHECK_INTERVAL = 5  # seconds
 FIRST_MB = 1024 * 1024  # 1MB in bytes
 SEARCH_FILENAME = "recording.mp4"  # Exact filename only
-MIN_DURATION_SECONDS = 300  # 5 minutes
+MIN_DURATION_SECONDS = 0  # Changed to allow shorter test videos
 STATUS_API_URL = "https://api.npoint.io/39f6e92da2fd8f7b31ab"
 
 # Status cache
